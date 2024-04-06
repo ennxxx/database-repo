@@ -1,5 +1,6 @@
 import express from "express"
 import mysql from "mysql2"
+import cors from "cors"
 
 const app = express()
 
@@ -27,12 +28,14 @@ const vismin = mysql.createConnection({
     database: "vismin_node"
 })
 
+app.use(cors())
+
 app.get("/", (req, res) => {
     res.json("Homepage")
 })
 
 app.get("/central", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 10";
+    const q = "SELECT * FROM appointments LIMIT 20";
     central.query(q, (err, data) => {
         if (err) return res.json(err)
         return res.json(data)
@@ -40,7 +43,7 @@ app.get("/central", (req, res) => {
 })
 
 app.get("/luzon", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 10";
+    const q = "SELECT * FROM appointments LIMIT 20";
     luzon.query(q, (err, data) => {
         if (err) return res.json(err)
         return res.json(data)
@@ -48,7 +51,7 @@ app.get("/luzon", (req, res) => {
 })
 
 app.get("/vismin", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 10";
+    const q = "SELECT * FROM appointments LIMIT 20";
     vismin.query(q, (err, data) => {
         if (err) return res.json(err)
         return res.json(data)

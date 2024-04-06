@@ -1,0 +1,120 @@
+:root {
+    --purple: #656BF1;
+    --black: #1E1E1E;
+    --grey: #BFBFBF;
+    --light-grey: #F5F5F5;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: first baseline;
+    padding: 20px 250px 100px 250px;
+}
+
+#logo {
+    height: 40px;
+    margin-bottom: 50px;
+}
+
+.header {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+#subtitle {
+    color: var(--purple);
+    font-family: "Arial Narrow", Arial, sans-serif;
+    margin-bottom: 10px;
+}
+
+#title {
+    color: var(--black);
+    font-family: "Arial Narrow", Arial, sans-serif;
+    font-size: 40px;
+    margin-top: 10px;
+}
+
+.appt-table {
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.appt-table th {
+    background-color: var(--black);
+    color: white;
+    font-weight: bold;
+    padding: 15px 10px;
+}
+
+.appt-table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--grey);
+}
+
+.appt-table tbody tr:nth-child(even) {
+    background-color: var(--light-grey);
+}
+
+.edit-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.edit-button {
+    background: none;
+    border: none;
+    padding: 20;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--grey);
+}
+
+.search-add {
+    margin-bottom: 30px;
+    display: flex;
+    width: 100%;
+}
+
+.search-bar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    margin-right: 10px;
+}
+
+.search-bar input[type="text"] {
+    width: 500px;
+    padding: 10px 55px;
+    font-size: 20px;
+    font-family: "Arial Narrow", Arial, sans-serif;
+    color: var(--black);
+    border: 1px solid var(--grey);
+    border-radius: 10px;
+}
+
+.search-bar input[type="text"]::placeholder {
+    color: var(--grey);
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    font-size: 22px;
+    color: var(--purple)
+}
+
+.button {
+    width: 100%;
+}
+
+.add-record-btn {
+    margin-left: auto;
+}
