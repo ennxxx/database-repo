@@ -7,19 +7,49 @@ import { PiPencilSimpleLine, PiMagnifyingGlassBold } from "react-icons/pi";
 import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
 const Appointments = () => {
-    const [appts, setAppts] = useState([])
+    const [appts, setAppts] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
         const fetchAllAppts = async () => {
             try {
-                const res = await axios.get("http://localhost:8800/central")
-                setAppts(res.data);
+                const res = await axios.get(`http://localhost:8800/central?page=${page}&limit=${itemsPerPage}`)
+                setAppts(res.data.data);
+                setTotalPages(res.data.totalPages);
             } catch (err) {
                 console.log(err);
             }
         }
         fetchAllAppts()
-    }, [])
+    }, [page, itemsPerPage]);
+
+    const handleItemsPerPageChange = (e) => {
+        const value = parseInt(e.target.value);
+        setItemsPerPage(value);
+        setPage(1);
+    };
+
+    const goToNextPage = () => {
+        if (page < totalPages) {
+            setPage(page + 1);
+        }
+    };
+
+    const goToPreviousPage = () => {
+        if (page > 1) {
+            setPage(page - 1);
+        }
+    };
+
+    const goToFirstPage = () => {
+        setPage(1);
+    };
+
+    const goToLastPage = () => {
+        setPage(totalPages);
+    };
 
     return (
         <div class="body">
@@ -81,26 +111,26 @@ const Appointments = () => {
                 <div class="navigate-content">
                     <div class="items">
                         Items per page:
-                        <select id="items-per-page">
+                        <select id="items-per-page" onChange={handleItemsPerPageChange}>
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="50">50</option>
                         </select>
                     </div>
                     <div class="pages">
-                        1 of 300
+                        {page} of {totalPages}
                     </div>
-                    <div class="buttons">
-                        <button class="first-page-btn">
+                    <div class="page-buttons">
+                        <button className="first-page-btn" onClick={goToFirstPage} disabled={page === 1} style={{ color: page === 1 ? '#BFBFBF' : 'inherit' }}>
                             <MdFirstPage />
                         </button>
-                        <button class="before-page-btn">
+                        <button className="before-page-btn" onClick={goToPreviousPage} disabled={page === 1} style={{ color: page === 1 ? '#BFBFBF' : 'inherit' }}>
                             <MdNavigateBefore />
                         </button>
-                        <button class="next-page-btn">
+                        <button className="next-page-btn" onClick={goToNextPage} disabled={page === totalPages} style={{ color: page === totalPages ? '#BFBFBF' : 'inherit' }}>
                             <MdNavigateNext />
                         </button>
-                        <button class="last-page-btn">
+                        <button className="last-page-btn" onClick={goToLastPage} disabled={page === totalPages} style={{ color: page === totalPages ? '#BFBFBF' : 'inherit' }}>
                             <MdLastPage />
                         </button>
                     </div>

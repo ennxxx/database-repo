@@ -35,26 +35,19 @@ app.get("/", (req, res) => {
 })
 
 app.get("/central", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 10";
+    const { page, limit } = req.query;
+    const offset = (page - 1) * limit;
+    const q = `SELECT * FROM appointments LIMIT ${limit} OFFSET ${offset}`;
     central.query(q, (err, data) => {
-        if (err) return res.json(err)
-        return res.json(data)
-    })
-})
+        if (err) return res.json(err);
 
-app.get("/luzon", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 20";
-    luzon.query(q, (err, data) => {
-        if (err) return res.json(err)
-        return res.json(data)
-    })
-})
-
-app.get("/vismin", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 20";
-    vismin.query(q, (err, data) => {
-        if (err) return res.json(err)
-        return res.json(data)
+        const countQuery = "SELECT COUNT(*) AS totalCount FROM appointments";
+        central.query(countQuery, (err, countData) => {
+            if (err) return res.json(err);
+            const totalCount = countData[0].totalCount;
+            const totalPages = Math.ceil(totalCount / limit);
+            return res.json({ data, totalPages });
+        });
     })
 })
 
