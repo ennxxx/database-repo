@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import '../App.css';
 import { PiPencilSimpleLine, PiMagnifyingGlassBold } from "react-icons/pi";
+import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
 const Appointments = () => {
     const [appts, setAppts] = useState([])
@@ -75,6 +76,36 @@ const Appointments = () => {
                     ))}
                 </tbody>
             </table>
+
+            <div class="navigate">
+                <div class="navigate-content">
+                    <div class="items">
+                        Items per page:
+                        <select id="items-per-page">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="pages">
+                        1 of 300
+                    </div>
+                    <div class="buttons">
+                        <button class="first-page-btn">
+                            <MdFirstPage />
+                        </button>
+                        <button class="before-page-btn">
+                            <MdNavigateBefore />
+                        </button>
+                        <button class="next-page-btn">
+                            <MdNavigateNext />
+                        </button>
+                        <button class="last-page-btn">
+                            <MdLastPage />
+                        </button>
+                    </div>
+                </div>
+            </div>
 
         </div>
     )

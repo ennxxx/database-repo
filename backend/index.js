@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 })
 
 app.get("/central", (req, res) => {
-    const q = "SELECT * FROM appointments LIMIT 20";
+    const q = "SELECT * FROM appointments LIMIT 10";
     central.query(q, (err, data) => {
         if (err) return res.json(err)
         return res.json(data)

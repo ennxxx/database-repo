@@ -13,7 +13,7 @@
     padding-top: 20px;
     padding-right: 100px;
     padding-left: 100px;
-    padding-bottom: 50px;
+    padding-bottom: 100px;
 }
 
 #logo {
@@ -39,41 +39,8 @@
     margin-top: 10px;
 }
 
-.appt-table {
-    width: 100%;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    text-align: left;
-    border-collapse: collapse;
-}
-
-.appt-table th {
-    background-color: var(--black);
-    color: white;
-    font-weight: bold;
-    padding: 15px 10px;
-}
-
-.appt-table td {
-    padding: 15px 10px;
-    border-bottom: 1px solid var(--grey);
-}
-
-.appt-table tbody tr:nth-child(even) {
-    background-color: var(--light-grey);
-}
-
-.edit-button {
-    background: none;
-    border: none;
-    padding: 20;
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--grey);
-}
-
 .search-add {
-    margin-bottom: 30px;
+    margin-bottom: 50px;
     display: flex;
     width: 100%;
 }
@@ -132,6 +99,82 @@
     cursor: pointer;
 }
 
+.appt-table {
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    text-align: left;
+    border-collapse: collapse;
+    margin-bottom: 60px;
+}
+
+.appt-table th {
+    background-color: var(--black);
+    color: white;
+    font-weight: bold;
+    padding: 15px 10px;
+}
+
+.appt-table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--grey);
+}
+
+.appt-table tbody tr:nth-child(even) {
+    background-color: var(--light-grey);
+}
+
+.edit-button {
+    background: none;
+    border: none;
+    padding: 20;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--grey);
+}
+
+.navigate {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    font-size: 20px;
+    font-family: "Arial Narrow", Arial, sans-serif;
+}
+
+.navigate-content {
+    display: flex;
+    width: auto;
+    border-top: 1px solid var(--grey);
+    padding-top: 20px;
+}
+
+.items {
+    margin-right: 30px;
+}
+
+#items-per-page {
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 16px;
+    font-family: "Arial Narrow", Arial, sans-serif;
+}
+
+.pages {
+    margin-right: 150px;
+    margin-top: 5px;
+}
+
+.first-page-btn,
+.before-page-btn,
+.next-page-btn,
+.last-page-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 30px;
+}
+
 @media (max-width: 1400px) {
     .body {
         padding-right: 60px;
@@ -149,5 +192,9 @@
 
     .add-record-btn {
         font-size: 16px;
+    }
+
+    .navigate {
+        font-size: 18px;
     }
 }
