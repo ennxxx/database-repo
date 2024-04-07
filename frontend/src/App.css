@@ -1,5 +1,6 @@
 :root {
     --purple: #656BF1;
+    --turquoise: #0B9F94;
     --black: #1E1E1E;
     --grey: #BFBFBF;
     --light-grey: #F5F5F5;
@@ -9,7 +10,10 @@
     display: flex;
     flex-direction: column;
     align-items: first baseline;
-    padding: 20px 250px 100px 250px;
+    padding-top: 20px;
+    padding-right: 100px;
+    padding-left: 100px;
+    padding-bottom: 50px;
 }
 
 #logo {
@@ -19,7 +23,6 @@
 
 .header {
     width: 100%;
-    margin-bottom: 20px;
     text-align: left;
 }
 
@@ -58,13 +61,6 @@
 
 .appt-table tbody tr:nth-child(even) {
     background-color: var(--light-grey);
-}
-
-.edit-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
 }
 
 .edit-button {
@@ -113,8 +109,45 @@
 
 .button {
     width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .add-record-btn {
     margin-left: auto;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    padding: 10px 20px;
+    border: none;
+    background-color: var(--turquoise);
+    color: white;
+    font-weight: bold;
+    border: 1px solid var(--turquoise);
+    border-radius: 10px;
+    width: 150px;
+}
+
+.add-record-btn:hover {
+    background-color: var(--black);
+    cursor: pointer;
+}
+
+@media (max-width: 1400px) {
+    .body {
+        padding-right: 60px;
+        padding-left: 60px;
+        min-width: 600px;
+    }
+
+    .appt-table {
+        font-size: 16px;
+    }
+
+    .search-bar input[type="text"] {
+        font-size: 18px;
+    }
+
+    .add-record-btn {
+        font-size: 16px;
+    }
 }
