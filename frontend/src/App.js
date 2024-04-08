@@ -10,7 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Appointments />} />
           <Route path="/add" element={<Add />} />
-          <Route path="/edit" element={<Edit />} />
+          <Route path="/edit/:apptid" element={<Edit />} />
         </Routes>
       </BrowserRouter>
     </div>

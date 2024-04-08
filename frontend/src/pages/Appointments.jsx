@@ -1,6 +1,8 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
 import axios from 'axios';
+
 import '../App.css';
 import { PiTrashFill, PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
 import {
@@ -173,8 +175,10 @@ const Appointments = () => {
                     {appts.map((appt) => (
                         <tr key={appt.apptid}>
                             <td>
-                                <button className="edit-button" onClick={toggleEditPopup}>
-                                    <PiPencilSimpleLine />
+                                <button className="edit-button">
+                                    <Link to={`/edit/${appt.apptid}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                        <PiPencilSimpleLine />
+                                    </Link>
                                 </button>
                                 <button className="delete-button" onClick={() => handleDelete(appt.apptid)}>
                                     <PiTrashFill />
@@ -191,8 +195,6 @@ const Appointments = () => {
                     ))}
                 </tbody>
             </table>
-
-            <EditPopup isOpen={isEditPopupOpen} onClose={toggleEditPopup} />
 
             <div className="navigate">
                 <div className="navigate-content">

@@ -129,6 +129,25 @@ app.delete("/central/:apptid", (req, res) => {
     })
 })
 
+app.put("/central/:apptid", (req, res) => {
+    const apptId = req.params.apptid;
+    const q = "UPDATE appointments SET `hospitalname` = ?, `QueueDate` = ?, `City` = ?, `Province` = ?, `RegionName` = ?, `mainspecialty` = ? WHERE apptid = ?"
+
+    const values = [
+        req.body.hospitalname,
+        req.body.QueueDate,
+        req.body.City,
+        req.body.Province,
+        req.body.RegionName,
+        req.body.mainspecialty
+    ];
+
+    central.query(q, [...values, apptId], (err, data) => {
+        if (err) return res.json(err);
+        return res.json("Succesfully edited appoinment!");
+    })
+})
+
 app.listen(8800, () => {
     console.log("Successfully connected!");
 });
