@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Appointments from "./pages/Appointments"
 import Add from "./pages/Add"
-import Update from "./pages/Update"
+import Edit from "./pages/Edit"
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Appointments />} />
           <Route path="/add" element={<Add />} />
-          <Route path="/update" element={<Update />} />
+          <Route path="/edit" element={<Edit />} />
         </Routes>
       </BrowserRouter>
     </div>

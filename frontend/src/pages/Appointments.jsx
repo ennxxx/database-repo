@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
 import { PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
@@ -11,6 +12,23 @@ import {
     MdCancel,
 } from 'react-icons/md';
 
+import Add from './Add.jsx';
+import Edit from './Edit.jsx';
+
+const AddPopup = ({ isOpen, onClose }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="popup-overlay">
+            <div className="popup">
+                <button className="close-btn" onClick={onClose}>X</button>
+                <Add />
+            </div>
+        </div>
+
+    )
+}
+
 const Appointments = () => {
     const [appts, setAppts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -18,6 +36,7 @@ const Appointments = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,13 +94,17 @@ const Appointments = () => {
         setPage(totalPages);
     };
 
+    const togglePopup = () => {
+        setIsPopupOpen(!isPopupOpen);
+    };
+
     return (
         <div className="body">
             <img src="/logo.png" id="logo" alt="logo" />
 
             <div className="header">
-                <h3 id="subtitle">RECORD LIST</h3>
-                <h1 id="title">Appointments</h1>
+                <h3 className="subtitle">RECORD LIST</h3>
+                <h1 className="title">Appointments</h1>
             </div>
 
             <div className="search-add">
@@ -101,7 +124,8 @@ const Appointments = () => {
                     )}
                 </div>
                 <div className="button">
-                    <button className="add-record-btn">Add Record</button>
+                    <button className="add-record-btn" onClick={togglePopup}>Add Record</button>
+                    <AddPopup isOpen={isPopupOpen} onClose={togglePopup} />
                 </div>
             </div>
 

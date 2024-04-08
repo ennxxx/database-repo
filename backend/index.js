@@ -2,7 +2,10 @@ import express from "express"
 import mysql from "mysql2"
 import cors from "cors"
 
-const app = express()
+const app = express();
+
+app.use(express.json());
+app.use(cors());
 
 const central = mysql.createConnection({
     host: "ccscloud.dlsu.edu.ph",
@@ -10,7 +13,7 @@ const central = mysql.createConnection({
     user: "root",
     password: "password1",
     database: "central_node"
-})
+});
 
 const luzon = mysql.createConnection({
     host: "ccscloud.dlsu.edu.ph",
@@ -18,7 +21,7 @@ const luzon = mysql.createConnection({
     user: "root",
     password: "password2",
     database: "luzon_node"
-})
+});
 
 const vismin = mysql.createConnection({
     host: "ccscloud.dlsu.edu.ph",
@@ -26,13 +29,7 @@ const vismin = mysql.createConnection({
     user: "root",
     password: "password3",
     database: "vismin_node"
-})
-
-app.use(cors())
-
-app.get("/", (req, res) => {
-    res.json("Homepage")
-})
+});
 
 app.get("/central", (req, res) => {
     const { page, limit } = req.query;
@@ -48,8 +45,8 @@ app.get("/central", (req, res) => {
             const totalPages = Math.ceil(totalCount / limit);
             return res.json({ data, totalPages });
         });
-    })
-})
+    });
+});
 
 app.get("/search", (req, res) => {
     const { searchTerm, page, limit } = req.query;
@@ -64,9 +61,31 @@ app.get("/search", (req, res) => {
             const totalPages = Math.ceil(totalCount / limit);
             return res.json({ data, totalPages });
         });
-    })
-})
+    });
+});
+
+app.post("/central", (req, res) => {
+    const q = "INSERT INTO appointments (`apptid`, `clinicid`, `doctorid`, `pxid`, `hospitalname`, `QueueDate`, `City`, `Province`, `RegionName`, `mainspecialty`) VALUES (?)";
+
+    const values = [
+        req.body.apptid,
+        req.body.clinicid,
+        req.body.doctorid,
+        req.body.pxid,
+        req.body.hospitalname,
+        req.body.QueueDate,
+        req.body.City,
+        req.body.Province,
+        req.body.RegionName,
+        req.body.mainspecialty
+    ];
+
+    central.query(q, [values], (err, data) => {
+        if (err) return res.json(err);
+        return res.json("Successfully created appointment!")
+    });
+});
 
 app.listen(8800, () => {
-    console.log("Successfully connected!")
-})
+    console.log("Successfully connected!");
+});
