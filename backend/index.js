@@ -7,29 +7,62 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const central = mysql.createConnection({
-    host: "ccscloud.dlsu.edu.ph",
-    port: 20219,
-    user: "root",
-    password: "password1",
-    database: "central_node"
-});
+let central, luzon, vismin;
 
-const luzon = mysql.createConnection({
-    host: "ccscloud.dlsu.edu.ph",
-    port: 20220,
-    user: "root",
-    password: "password2",
-    database: "luzon_node"
-});
+function handleDisconnect() {
+  central = mysql.createConnection({
+      host: "ccscloud.dlsu.edu.ph",
+      port: 20219,
+      user: "root",
+      password: "password1",
+      database: "central_node"
+  });
 
-const vismin = mysql.createConnection({
-    host: "ccscloud.dlsu.edu.ph",
-    port: 20221,
-    user: "root",
-    password: "password3",
-    database: "vismin_node"
-});
+  central.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+
+  luzon = mysql.createConnection({
+      host: "ccscloud.dlsu.edu.ph",
+      port: 20220,
+      user: "root",
+      password: "password2",
+      database: "luzon_node"
+  });
+
+  luzon.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+
+  vismin = mysql.createConnection({
+      host: "ccscloud.dlsu.edu.ph",
+      port: 20221,
+      user: "root",
+      password: "password3",
+      database: "vismin_node"
+  });
+
+  vismin.on('error', function(err) {
+    console.log('db error', err);
+    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect();
+    } else {
+      throw err;
+    }
+  });
+}
+
+handleDisconnect();
 
 app.get("/central", (req, res) => {
     const { page, limit } = req.query;
