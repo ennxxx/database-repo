@@ -266,6 +266,19 @@
 .input-container input {
     margin-top: 10px;
     margin-bottom: 15px;
+    padding: 10px 10px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    border: 1px solid var(--black);
+    border-radius: 5px;
+    width: 100%;
+    flex: 1;
+    color: var(--grey-);
+}
+
+.input-container select {
+    margin-top: 10px;
+    margin-bottom: 15px;
     padding: 10px 5px;
     font-size: 14px;
     font-family: Arial, sans-serif;
@@ -273,6 +286,7 @@
     border-radius: 5px;
     width: 100%;
     flex: 1;
+    color: var(--grey-);
 }
 
 .submit-btn {
