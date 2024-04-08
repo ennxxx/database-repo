@@ -1,29 +1,53 @@
-import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
-import axios from 'axios'
+import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import '../App.css';
-import { PiPencilSimpleLine, PiMagnifyingGlassBold } from "react-icons/pi";
-import { MdFirstPage, MdLastPage, MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import { PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
+import {
+    MdFirstPage,
+    MdLastPage,
+    MdNavigateBefore,
+    MdNavigateNext,
+    MdCancel,
+} from 'react-icons/md';
 
 const Appointments = () => {
     const [appts, setAppts] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTriggered, setSearchTriggered] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
-        const fetchAllAppts = async () => {
+        const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:8800/central?page=${page}&limit=${itemsPerPage}`)
+                let url = `http://localhost:8800/central?page=${page}&limit=${itemsPerPage}`;
+                if (searchTerm && searchTriggered) {
+                    url = `http://localhost:8800/search?searchTerm=${searchTerm}&page=${page}&limit=${itemsPerPage}`;
+                }
+                const res = await axios.get(url);
                 setAppts(res.data.data);
                 setTotalPages(res.data.totalPages);
             } catch (err) {
                 console.log(err);
             }
+        };
+        fetchData();
+    }, [page, itemsPerPage, searchTerm, searchTriggered]);
+
+    const handleKeyDown = async (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            setSearchTriggered(true);
         }
-        fetchAllAppts()
-    }, [page, itemsPerPage]);
+    };
+
+    const handleCancelClick = () => {
+        setSearchTerm("");
+        setPage(1);
+        setSearchTriggered(false);
+    };
 
     const handleItemsPerPageChange = (e) => {
         const value = parseInt(e.target.value);
@@ -52,29 +76,36 @@ const Appointments = () => {
     };
 
     return (
-        <div class="body">
+        <div className="body">
+            <img src="/logo.png" id="logo" alt="logo" />
 
-            <img src="/logo.png" id="logo"></img>
-
-
-            <div class="header">
+            <div className="header">
                 <h3 id="subtitle">RECORD LIST</h3>
                 <h1 id="title">Appointments</h1>
             </div>
 
-            <div class="search-add">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search for an appointment..." />
-                    <PiMagnifyingGlassBold class="search-icon" />
+            <div className="search-add">
+                <div className="search-bar">
+                    <PiMagnifyingGlassBold className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Search for an appointment..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    {searchTerm && (
+                        <button className="cancel-icon" onClick={handleCancelClick}>
+                            <MdCancel />
+                        </button>
+                    )}
                 </div>
-                <div class="button">
-                    <button class="add-record-btn">
-                        Add Record
-                    </button>
+                <div className="button">
+                    <button className="add-record-btn">Add Record</button>
                 </div>
             </div>
 
-            <table class="appt-table">
+            <table className="appt-table">
                 <thead>
                     <tr>
                         <th></th>
@@ -88,15 +119,15 @@ const Appointments = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {appts.map(appt => (
+                    {appts.map((appt) => (
                         <tr key={appt.apptid}>
                             <td>
-                                <button class="edit-button">
+                                <button className="edit-button">
                                     <PiPencilSimpleLine />
                                 </button>
                             </td>
                             <td>{appt.apptid}</td>
-                            <td>{appt.hospitalname ? appt.hospitalname : "-"}</td>
+                            <td>{appt.hospitalname ? appt.hospitalname : '-'}</td>
                             <td>{new Date(appt.QueueDate).toLocaleDateString()}</td>
                             <td>{appt.City}</td>
                             <td>{appt.Province}</td>
@@ -107,9 +138,9 @@ const Appointments = () => {
                 </tbody>
             </table>
 
-            <div class="navigate">
-                <div class="navigate-content">
-                    <div class="items">
+            <div className="navigate">
+                <div className="navigate-content">
+                    <div className="items">
                         Items per page:
                         <select id="items-per-page" onChange={handleItemsPerPageChange}>
                             <option value="10">10</option>
@@ -117,28 +148,47 @@ const Appointments = () => {
                             <option value="50">50</option>
                         </select>
                     </div>
-                    <div class="pages">
+                    <div className="pages">
                         {page} of {totalPages}
                     </div>
-                    <div class="page-buttons">
-                        <button className="first-page-btn" onClick={goToFirstPage} disabled={page === 1} style={{ color: page === 1 ? '#BFBFBF' : 'inherit' }}>
+                    <div className="page-buttons">
+                        <button
+                            className="first-page-btn"
+                            onClick={goToFirstPage}
+                            disabled={page === 1}
+                            style={{ color: page === 1 ? '#BFBFBF' : 'inherit' }}
+                        >
                             <MdFirstPage />
                         </button>
-                        <button className="before-page-btn" onClick={goToPreviousPage} disabled={page === 1} style={{ color: page === 1 ? '#BFBFBF' : 'inherit' }}>
+                        <button
+                            className="before-page-btn"
+                            onClick={goToPreviousPage}
+                            disabled={page === 1}
+                            style={{ color: page === 1 ? '#BFBFBF' : 'inherit' }}
+                        >
                             <MdNavigateBefore />
                         </button>
-                        <button className="next-page-btn" onClick={goToNextPage} disabled={page === totalPages} style={{ color: page === totalPages ? '#BFBFBF' : 'inherit' }}>
+                        <button
+                            className="next-page-btn"
+                            onClick={goToNextPage}
+                            disabled={page === totalPages}
+                            style={{ color: page === totalPages ? '#BFBFBF' : 'inherit' }}
+                        >
                             <MdNavigateNext />
                         </button>
-                        <button className="last-page-btn" onClick={goToLastPage} disabled={page === totalPages} style={{ color: page === totalPages ? '#BFBFBF' : 'inherit' }}>
+                        <button
+                            className="last-page-btn"
+                            onClick={goToLastPage}
+                            disabled={page === totalPages}
+                            style={{ color: page === totalPages ? '#BFBFBF' : 'inherit' }}
+                        >
                             <MdLastPage />
                         </button>
                     </div>
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default Appointments
+export default Appointments;
