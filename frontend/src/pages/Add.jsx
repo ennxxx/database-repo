@@ -47,7 +47,7 @@ const Add = () => {
         }
     };
 
-    const handleClick = async (e) => {
+    const handleAddRecord = async (e) => {
         e.preventDefault();
         try {
             await axios.post(`http://localhost:8800/central`, appt, {
@@ -55,7 +55,7 @@ const Add = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            navigate("/");
+            window.location.reload();
         } catch (err) {
             console.log(err);
         }
@@ -93,7 +93,7 @@ const Add = () => {
             </div>
 
             <div className="button">
-                <button className="submit-btn" onClick={handleClick}>Submit</button>
+                <button className="submit-btn" onClick={handleAddRecord}>Submit</button>
             </div>
 
 
