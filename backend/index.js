@@ -86,6 +86,19 @@ app.post("/central", (req, res) => {
     });
 });
 
+app.put("/central/:id", (req, res) => {
+    const id = req.params.id;
+    const { hospitalname, QueueDate, City, Province, RegionName, mainspecialty } = req.body;
+
+    const q = "UPDATE appointments SET hospitalname=?, QueueDate=?, City=?, Province=?, RegionName=?, mainspecialty=? WHERE apptid=?";
+    const values = [hospitalname, QueueDate, City, Province, RegionName, mainspecialty, id];
+
+    central.query(q, values, (err, data) => {
+        if (err) return res.json(err);
+        return res.json("Appointment updated successfully!");
+    });
+});
+
 app.listen(8800, () => {
     console.log("Successfully connected!");
 });

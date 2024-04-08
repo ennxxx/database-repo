@@ -18,10 +18,24 @@ const AddPopup = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="popup-overlay">
+        <div className="add-popup-overlay">
             <div className="popup">
                 <button className="close-btn" onClick={onClose}>X</button>
                 <Add />
+            </div>
+        </div>
+
+    )
+}
+
+const EditPopup = ({ isOpen, onClose }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="edit-popup-overlay">
+            <div className="popup">
+                <button className="close-btn" onClick={onClose}>X</button>
+                <Edit />
             </div>
         </div>
 
@@ -35,7 +49,8 @@ const Appointments = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -93,8 +108,12 @@ const Appointments = () => {
         setPage(totalPages);
     };
 
-    const togglePopup = () => {
-        setIsPopupOpen(!isPopupOpen);
+    const toggleAddPopup = () => {
+        setIsAddPopupOpen(!isAddPopupOpen);
+    };
+
+    const toggleEditPopup = () => {
+        setIsEditPopupOpen(!isEditPopupOpen);
     };
 
     return (
@@ -123,8 +142,8 @@ const Appointments = () => {
                     )}
                 </div>
                 <div className="button">
-                    <button className="add-record-btn" onClick={togglePopup}>Add Record</button>
-                    <AddPopup isOpen={isPopupOpen} onClose={togglePopup} />
+                    <button className="add-record-btn" onClick={toggleAddPopup}>Add Record</button>
+                    <AddPopup isOpen={isAddPopupOpen} onClose={toggleAddPopup} />
                 </div>
             </div>
 
@@ -145,7 +164,7 @@ const Appointments = () => {
                     {appts.map((appt) => (
                         <tr key={appt.apptid}>
                             <td>
-                                <button className="edit-button">
+                                <button className="edit-button" onClick={toggleEditPopup}>
                                     <PiPencilSimpleLine />
                                 </button>
                             </td>
@@ -160,6 +179,8 @@ const Appointments = () => {
                     ))}
                 </tbody>
             </table>
+
+            <EditPopup isOpen={isEditPopupOpen} onClose={toggleEditPopup} />
 
             <div className="navigate">
                 <div className="navigate-content">

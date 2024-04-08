@@ -63,8 +63,6 @@ const Add = () => {
         }
     };
 
-    console.log(appt)
-
     return (
         <div className="add-record-form">
 
@@ -90,6 +88,7 @@ const Add = () => {
             <div className="input-container">
                 <label htmlFor="region">Region:</label>
                 <select id="region" onChange={handleRegion} name="RegionName" >
+                    <option value="" disabled selected>Region</option>
                     <option value="National Capital Region (NCR)">National Capital Region (NCR)</option>
                     <option value="Central Visayas (VII)">Central Visayas (VII)</option>
                     <option value="SOCCSKSARGEN (Cotabato Region) (XII)">SOCCSKSARGEN (Cotabato Region) (XII)</option>
