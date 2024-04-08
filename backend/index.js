@@ -10,56 +10,56 @@ app.use(cors());
 let central, luzon, vismin;
 
 function handleDisconnect() {
-  central = mysql.createConnection({
-      host: "ccscloud.dlsu.edu.ph",
-      port: 20219,
-      user: "root",
-      password: "password1",
-      database: "central_node"
-  });
+    central = mysql.createConnection({
+        host: "ccscloud.dlsu.edu.ph",
+        port: 20219,
+        user: "root",
+        password: "password1",
+        database: "central_node"
+    });
 
-  central.on('error', function(err) {
-    console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleDisconnect();
-    } else {
-      throw err;
-    }
-  });
+    central.on('error', function (err) {
+        console.log('db error', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
 
-  luzon = mysql.createConnection({
-      host: "ccscloud.dlsu.edu.ph",
-      port: 20220,
-      user: "root",
-      password: "password2",
-      database: "luzon_node"
-  });
+    luzon = mysql.createConnection({
+        host: "ccscloud.dlsu.edu.ph",
+        port: 20220,
+        user: "root",
+        password: "password2",
+        database: "luzon_node"
+    });
 
-  luzon.on('error', function(err) {
-    console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleDisconnect();
-    } else {
-      throw err;
-    }
-  });
+    luzon.on('error', function (err) {
+        console.log('db error', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
 
-  vismin = mysql.createConnection({
-      host: "ccscloud.dlsu.edu.ph",
-      port: 20221,
-      user: "root",
-      password: "password3",
-      database: "vismin_node"
-  });
+    vismin = mysql.createConnection({
+        host: "ccscloud.dlsu.edu.ph",
+        port: 20221,
+        user: "root",
+        password: "password3",
+        database: "vismin_node"
+    });
 
-  vismin.on('error', function(err) {
-    console.log('db error', err);
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleDisconnect();
-    } else {
-      throw err;
-    }
-  });
+    vismin.on('error', function (err) {
+        console.log('db error', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            handleDisconnect();
+        } else {
+            throw err;
+        }
+    });
 }
 
 handleDisconnect();
@@ -119,18 +119,15 @@ app.post("/central", (req, res) => {
     });
 });
 
-app.put("/central/:id", (req, res) => {
-    const id = req.params.id;
-    const { hospitalname, QueueDate, City, Province, RegionName, mainspecialty } = req.body;
+app.delete("/central/:apptid", (req, res) => {
+    const apptId = req.params.apptid;
+    const q = "DELETE FROM appointments WHERE apptid = ?"
 
-    const q = "UPDATE appointments SET hospitalname=?, QueueDate=?, City=?, Province=?, RegionName=?, mainspecialty=? WHERE apptid=?";
-    const values = [hospitalname, QueueDate, City, Province, RegionName, mainspecialty, id];
-
-    central.query(q, values, (err, data) => {
+    central.query(q, [apptId], (err, data) => {
         if (err) return res.json(err);
-        return res.json("Appointment updated successfully!");
-    });
-});
+        return res.json("Succesfully deleted appoinment!");
+    })
+})
 
 app.listen(8800, () => {
     console.log("Successfully connected!");

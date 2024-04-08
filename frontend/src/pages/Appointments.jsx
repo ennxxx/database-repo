@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../App.css';
-import { PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
+import { PiTrashFill, PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
 import {
     MdFirstPage,
     MdLastPage,
@@ -81,6 +81,15 @@ const Appointments = () => {
         setPage(1);
         setSearchTriggered(false);
     };
+
+    const handleDelete = async (apptid) => {
+        try {
+            await axios.delete("http://localhost:8800/central/" + apptid);
+            window.location.reload();
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const handleItemsPerPageChange = (e) => {
         const value = parseInt(e.target.value);
@@ -166,6 +175,9 @@ const Appointments = () => {
                             <td>
                                 <button className="edit-button" onClick={toggleEditPopup}>
                                     <PiPencilSimpleLine />
+                                </button>
+                                <button className="delete-button" onClick={() => handleDelete(appt.apptid)}>
+                                    <PiTrashFill />
                                 </button>
                             </td>
                             <td>{appt.apptid}</td>
