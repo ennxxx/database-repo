@@ -36,14 +36,14 @@ const Appointments = () => {
         fetchData();
     }, [page, itemsPerPage, searchTerm, searchTriggered]);
 
-    const handleKeyDown = async (e) => {
+    const handleSearch = async (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             setSearchTriggered(true);
         }
     };
 
-    const handleCancelClick = () => {
+    const handleCancel = () => {
         setSearchTerm("");
         setPage(1);
         setSearchTriggered(false);
@@ -92,10 +92,10 @@ const Appointments = () => {
                         placeholder="Search for an appointment..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyDown={handleKeyDown}
+                        onKeyDown={handleSearch}
                     />
                     {searchTerm && (
-                        <button className="cancel-icon" onClick={handleCancelClick}>
+                        <button className="cancel-icon" onClick={handleCancel}>
                             <MdCancel />
                         </button>
                     )}
