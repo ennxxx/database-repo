@@ -36,14 +36,16 @@ const Add = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+    
         if (name === "QueueDate") {
-            const formattedDateTime = new Date(value).toISOString().slice(0, 19).replace('T', ' ');
-            setAppt(prev => ({ ...prev, [name]: formattedDateTime }));
+            const formattedDate= new Date(value).toISOString().slice(0, 10);
+            setAppt(prev => ({ ...prev, [name]: formattedDate }));
         } else {
             setAppt(prev => ({ ...prev, [name]: value }));
         }
     };
+    
+    
 
     const handleRegion = (e) => {
         setAppt(prev => ({ ...prev, RegionName: e.target.value }));
@@ -75,7 +77,7 @@ const Add = () => {
             </div>
             <div className="input-container">
                 <label htmlFor="queueDate">Queue Date:</label>
-                <input id="queueDate" type="datetime-local" placeholder="Queue Date" onChange={handleChange} name="QueueDate" />
+                <input id="queueDate" type="date" placeholder="Queue Date" onChange={handleChange} name="QueueDate" />
             </div>
             <div className="input-container">
                 <label htmlFor="city">City:</label>
