@@ -30,20 +30,6 @@ const AddPopup = ({ isOpen, onClose }) => {
     )
 }
 
-const EditPopup = ({ isOpen, onClose }) => {
-    if (!isOpen) return null;
-
-    return (
-        <div className="edit-popup-overlay">
-            <div className="popup">
-                <button className="close-btn" onClick={onClose}>X</button>
-                <Edit />
-            </div>
-        </div>
-
-    )
-}
-
 const Appointments = () => {
     const [appts, setAppts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -53,6 +39,7 @@ const Appointments = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+    const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -127,6 +114,19 @@ const Appointments = () => {
         setIsEditPopupOpen(!isEditPopupOpen);
     };
 
+    const EditPopup = ({ isOpen, onClose }) => {
+        if (!isOpen) return null;
+
+        return (
+            <div className="edit-popup-overlay">
+                <div className="popup">
+                    <button className="close-btn" onClick={onClose}>X</button>
+                    <Edit apptId={selectedAppointmentId} />
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="body">
             <img src="/logo.png" id="logo" alt="logo" />
@@ -175,10 +175,8 @@ const Appointments = () => {
                     {appts.map((appt) => (
                         <tr key={appt.apptid}>
                             <td>
-                                <button className="edit-button">
-                                    <Link to={`/edit/${appt.apptid}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                        <PiPencilSimpleLine />
-                                    </Link>
+                                <button className="edit-button" onClick={() => { setSelectedAppointmentId(appt.apptid); toggleEditPopup(); }}>
+                                    <PiPencilSimpleLine />
                                 </button>
                                 <button className="delete-button" onClick={() => handleDelete(appt.apptid)}>
                                     <PiTrashFill />
@@ -195,6 +193,8 @@ const Appointments = () => {
                     ))}
                 </tbody>
             </table>
+
+            <EditPopup isOpen={isEditPopupOpen} onClose={toggleEditPopup} selectedAppointmentId={selectedAppointmentId} />
 
             <div className="navigate">
                 <div className="navigate-content">

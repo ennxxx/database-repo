@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 
-const Edit = () => {
-
-    const location = useLocation();
-    const apptId = location.pathname.split("/")[2];
+const Edit = ({ apptId }) => {
 
     const [appt, setAppt] = useState({
+        apptid: "",
+        clinicid: "",
+        doctorid: "",
+        pxid: "",
         hospitalname: "",
         QueueDate: "",
         City: "",
@@ -16,6 +17,19 @@ const Edit = () => {
         RegionName: "",
         mainspecialty: ""
     });
+
+    useEffect(() => {
+        const fetchAppointmentData = async () => {
+            try {
+                const res = await axios.get(`http://localhost:8800/appointment?appointmentID=` + apptId);
+                const appointmentData = res.data;
+                setAppt(appointmentData);
+            } catch (error) {
+                console.error('Error fetching appointment data:', error);
+            }
+        };
+        fetchAppointmentData();
+    }, [apptId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -54,24 +68,24 @@ const Edit = () => {
 
             <div className="input-container">
                 <label htmlFor="hospitalName">Hospital Name:</label>
-                <input id="hospitalName" type="text" value="hotdog" onChange={handleChange} name="hospitalname" />
+                <input id="hospitalName" type="text" placeholder={appt.hospitalname} onChange={handleChange} name="hospitalname" />
             </div>
             <div className="input-container">
                 <label htmlFor="queueDate">Queue Date:</label>
-                <input id="queueDate" type="date" placeholder="Queue Date" onChange={handleChange} name="QueueDate" />
+                <input id="queueDate" type="date" placeholder={appt.QueueDate} onChange={handleChange} name="QueueDate" />
             </div>
             <div className="input-container">
                 <label htmlFor="city">City:</label>
-                <input id="city" type="text" placeholder="City" onChange={handleChange} name="City" />
+                <input id="city" type="text" placeholder={appt.City} onChange={handleChange} name="City" />
             </div>
             <div className="input-container">
                 <label htmlFor="province">Province:</label>
-                <input id="province" type="text" placeholder="Province" onChange={handleChange} name="Province" />
+                <input id="province" type="text" placeholder={appt.Province} onChange={handleChange} name="Province" />
             </div>
             <div className="input-container">
                 <label htmlFor="region">Region:</label>
                 <select id="region" onChange={handleRegion} name="RegionName" >
-                    <option value="" disabled selected>Region</option>
+                    <option value="" disable selected>{appt.RegionName}</option>
                     <option value="National Capital Region (NCR)">National Capital Region (NCR)</option>
                     <option value="Central Visayas (VII)">Central Visayas (VII)</option>
                     <option value="SOCCSKSARGEN (Cotabato Region) (XII)">SOCCSKSARGEN (Cotabato Region) (XII)</option>
@@ -86,7 +100,7 @@ const Edit = () => {
             </div>
             <div className="input-container">
                 <label htmlFor="mainSpecialty">Main Specialty:</label>
-                <input id="mainSpecialty" type="text" placeholder="Main Specialty" onChange={handleChange} name="mainspecialty" />
+                <input id="mainSpecialty" type="text" placeholder={appt.mainspecialty} onChange={handleChange} name="mainspecialty" />
             </div>
 
             <div className="button">

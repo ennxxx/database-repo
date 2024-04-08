@@ -129,6 +129,20 @@ app.delete("/central/:apptid", (req, res) => {
     })
 })
 
+app.get("/appointment", (req, res) => {
+    const { appointmentID } = req.query;
+    const q = `SELECT * FROM appointments WHERE apptid LIKE '%${appointmentID}%'`;
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        if (data.length > 0) {
+            const appointmentData = data[0];
+            return res.json(appointmentData);
+        } else {
+            return res.json({});
+        }
+    });
+});
+
 app.put("/central/:apptid", (req, res) => {
     const apptId = req.params.apptid;
     const q = "UPDATE appointments SET `hospitalname` = ?, `QueueDate` = ?, `City` = ?, `Province` = ?, `RegionName` = ?, `mainspecialty` = ? WHERE apptid = ?"

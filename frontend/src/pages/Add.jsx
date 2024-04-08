@@ -36,16 +36,14 @@ const Add = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
+
         if (name === "QueueDate") {
-            const formattedDate= new Date(value).toISOString().slice(0, 10);
+            const formattedDate = new Date(value).toISOString().slice(0, 10);
             setAppt(prev => ({ ...prev, [name]: formattedDate }));
         } else {
             setAppt(prev => ({ ...prev, [name]: value }));
         }
     };
-    
-    
 
     const handleRegion = (e) => {
         setAppt(prev => ({ ...prev, RegionName: e.target.value }));
