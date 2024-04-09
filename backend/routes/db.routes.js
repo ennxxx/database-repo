@@ -17,6 +17,12 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
         req.body.mainspecialty
     ];
 
+    // // original
+    // central.query(q, [values], (err, data) => {
+    //     if (err) return res.json(err);
+    //     return res.json("Successfully created appointment!")
+    // });
+
     if (isCentralConnected()){
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
