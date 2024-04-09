@@ -20,24 +20,24 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
     if (isCentralConnected()){
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
-            if (!(isLuzonConnected() && isVisMinConnected())){
+            if (!(isLuzonConnected() && isVisMinConnected())){  // when other node is down, need to ensure it queries successfully to central node
                 return res.json("Successfully created appointment!")
             }
         });
         if (determineRegion(req.body.RegionName) == 'Luzon'){
-            // weter or not tis errors still need to execute, cuz in case error, it will log 
+            // wheter or not this errors still need to execute, cuz in case error, it will log 
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
                 return res.json("Successfully created appointment!")
             });
         } else {
-            // weter or not tis errors still need to execute, cuz in case error, it will log 
+            // wheter or not this errors still need to execute, cuz in case error, it will log 
             vismin.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
                 return res.json("Successfully created appointment!")
             });
         }
-    } else {    // central node is down, no need to ceck if oters are down bcuz specs say only 1 can be down
+    } else {    // central node is down, no need to check if others are down bcuz specs say only 1 can be down
         if (determineRegion(req.body.RegionName) == 'Luzon'){
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
@@ -49,7 +49,7 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
                 // return res.json("Successfully created appointment!")
             });
         }
-        // tis will error, but needed for logs
+        // this will error, but needed for logs
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
             return res.json("Successfully created appointment!")
