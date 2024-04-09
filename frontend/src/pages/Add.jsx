@@ -38,7 +38,7 @@ const Add = () => {
         const { name, value } = e.target;
 
         if (name === "QueueDate") {
-            const formattedDate = new Date(value).toISOString().slice(0, 10);
+            const formattedDate = value.slice(0, 10);
             setAppt(prev => ({ ...prev, [name]: formattedDate }));
         } else {
             setAppt(prev => ({ ...prev, [name]: value }));

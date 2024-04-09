@@ -23,8 +23,10 @@ const Edit = ({ apptId }) => {
             try {
                 const res = await axios.get(`http://localhost:8800/appointment?appointmentID=` + apptId);
                 let appointmentData = res.data;
-                const formattedDate = new Date(appointmentData.QueueDate).toISOString().slice(0, 10);
-                appointmentData = { ...appointmentData, QueueDate: formattedDate };
+                const date = new Date(appointmentData.QueueDate);
+                const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+                const formattedDate = localDate.toISOString().slice(0, 10);
+                appointmentData = { ...appointmentData, QueueDate: formattedDate }; 
                 setAppt(appointmentData);   
             } catch (error) {
                 console.error('Error fetching appointment data:', error);
@@ -74,7 +76,7 @@ const Edit = ({ apptId }) => {
             </div>
             <div className="input-container">
                 <label htmlFor="queueDate">Queue Date:</label>
-                <input id="queueDate" type="date" placeholder={appt.QueueDate} onChange={handleChange} name="QueueDate" />
+                <input id="queueDate" type="date" value={appt.QueueDate} onChange={handleChange} name="QueueDate" />
             </div>
             <div className="input-container">
                 <label htmlFor="city">City:</label>
