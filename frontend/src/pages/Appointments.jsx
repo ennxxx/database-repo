@@ -1,7 +1,8 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import axios from 'axios';
+import { Helmet } from 'react-helmet';
 
 import '../App.css';
 import { PiTrashFill, PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
@@ -129,6 +130,10 @@ const Appointments = () => {
 
     return (
         <div className="body">
+            <Helmet>
+            <link rel="icon" href="/favicon.ico" />
+            <title>Appointments</title>
+            </Helmet>
             <img src="/logo.png" id="logo" alt="logo" />
 
             <div className="header">
