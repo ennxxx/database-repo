@@ -89,16 +89,23 @@ const Add = () => {
                 <label htmlFor="region">Region:</label>
                 <select id="region" onChange={handleRegion} name="RegionName" >
                     <option value="" disabled selected>Region</option>
-                    <option value="National Capital Region (NCR)">National Capital Region (NCR)</option>
-                    <option value="Central Visayas (VII)">Central Visayas (VII)</option>
-                    <option value="SOCCSKSARGEN (Cotabato Region) (XII)">SOCCSKSARGEN (Cotabato Region) (XII)</option>
-                    <option value="CALABARZON (IV-A)">CALABARZON (IV-A)</option>
-                    <option value="Northern Mindanao (X)">Northern Mindanao (X)</option>
                     <option value="IIlocos Region (I)">Ilocos Region (I)</option>
-                    <option value="Bicol Region (V)">Bicol Region (V)</option>
-                    <option value="Eastern Visayas (VIII)">Eastern Visayas (VIII)</option>
-                    <option value="Western Visayas (VI)">Western Visayas (VI)</option>
+                    <option value="Cagayan Valley (II)">Cagayan Valley (II)</option>
                     <option value="Central Luzon (III)">Central Luzon (III)</option>
+                    <option value="CALABARZON (IV-A)">CALABARZON (IV-A)</option>
+                    <option value="MIMAROPA (IV-B)">MIMAROPA (IV-B)</option>
+                    <option value="Bicol Region (V)">Bicol Region (V)</option>
+                    <option value="Western Visayas (VI)">Western Visayas (VI)</option>
+                    <option value="Central Visayas (VII)">Central Visayas (VII)</option>
+                    <option value="Eastern Visayas (VIII)">Eastern Visayas (VIII)</option>
+                    <option value="Zamboanga Peninsula (IX)">Zamboanga Peninsula (IX)</option>
+                    <option value="Northern Mindanao (X)">Northern Mindanao (X)</option>
+                    <option value="Davao Region (XI)">Davao Region (XI)</option>
+                    <option value="SOCCSKSARGEN (Cotabato Region) (XII)">SOCCSKSARGEN (Cotabato Region) (XII)</option>
+                    <option value="Caraga (XIII)">Caraga (XIII)</option>
+                    <option value="National Capital Region (NCR)">National Capital Region (NCR)</option>
+                    <option value="Cordillera Administrative Region (CAR)">Cordillera Administrative Region (CAR)</option>
+                    <option value="Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
                 </select>
             </div>
             <div className="input-container">
