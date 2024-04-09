@@ -22,8 +22,10 @@ const Edit = ({ apptId }) => {
         const fetchAppointmentData = async () => {
             try {
                 const res = await axios.get(`http://localhost:8800/appointment?appointmentID=` + apptId);
-                const appointmentData = res.data;
-                setAppt(appointmentData);
+                let appointmentData = res.data;
+                const formattedDate = new Date(appointmentData.QueueDate).toISOString().slice(0, 10);
+                appointmentData = { ...appointmentData, QueueDate: formattedDate };
+                setAppt(appointmentData);   
             } catch (error) {
                 console.error('Error fetching appointment data:', error);
             }

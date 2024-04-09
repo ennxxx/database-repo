@@ -132,7 +132,7 @@ const Appointments = () => {
         <div className="body">
             <Helmet>
             <link rel="icon" href="/favicon.ico" />
-            <title>Appointments</title>
+            <title> Appointments</title>
             </Helmet>
             <img src="/logo.png" id="logo" alt="logo" />
 
