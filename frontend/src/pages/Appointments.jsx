@@ -1,8 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios';
-import { Helmet } from 'react-helmet';
 
 import '../App.css';
 import { PiTrashFill, PiPencilSimpleLine, PiMagnifyingGlassBold } from 'react-icons/pi';
@@ -33,6 +32,7 @@ const AddPopup = ({ isOpen, onClose }) => {
 
 const Appointments = () => {
     const [appts, setAppts] = useState([]);
+    const [activeLink, setActiveLink] = useState('view');
     const [searchTerm, setSearchTerm] = useState('');
     const [searchTriggered, setSearchTriggered] = useState(false);
     const [page, setPage] = useState(1);
@@ -130,11 +130,20 @@ const Appointments = () => {
 
     return (
         <div className="body">
-            <Helmet>
-            <link rel="icon" href="/favicon.ico" />
-            <title> Appointments</title>
-            </Helmet>
-            <img src="/logo.png" id="logo" alt="logo" />
+
+            <div className="navbar">
+                <div className="navlogo">
+                    <img src="/logo.png" id="logo" alt="logo" />
+                </div>
+                <div className="navlinks">
+                    <p className={`navlink ${activeLink === 'view' ? 'active' : ''}`}>
+                        <Link to={`/`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={() => setActiveLink('view')}>View Records</Link>
+                    </p>
+                    <p className="navlink">
+                        <Link to={`/report`} style={{ textDecoration: 'none', color: 'inherit' }} onClick={() => setActiveLink('report')}>Generate Report</Link>
+                    </p>
+                </div>
+            </div>
 
             <div className="header">
                 <h3 className="subtitle">RECORD LIST</h3>

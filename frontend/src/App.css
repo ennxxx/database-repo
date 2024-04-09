@@ -6,7 +6,7 @@
     --light-grey: #F5F5F5;
 }
 
-/* Appointments */
+/* Base */
 
 .body {
     display: flex;
@@ -16,6 +16,30 @@
     padding-right: 100px;
     padding-left: 100px;
     padding-bottom: 100px;
+}
+
+.navbar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.navlinks {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navlink {
+    margin-left: 30px;
+}
+
+.navlink:hover {
+    color: var(--purple)
+}
+
+.navlink.active {
+    font-weight: bold;
+    color: var(--purple)
 }
 
 #logo {
@@ -40,6 +64,8 @@
     font-size: 40px;
     margin-top: 10px;
 }
+
+/* Appointments */
 
 .search-add {
     margin-bottom: 50px;
@@ -258,9 +284,9 @@
     color: #999;
 }
 
-/* Add Record */
+/* Add/Edit Record */
 
-.add-record-form {
+.record-form {
     display: flex;
     flex-direction: column;
     align-items: first baseline;
@@ -328,6 +354,64 @@
 .submit-btn:hover {
     background-color: var(--black);
     cursor: pointer;
+}
+
+/* Generate */
+
+.appt-cards {
+    display: flex;
+    width: 100%;
+}
+
+.appt-card {
+    width: 25%;
+    height: 320px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    margin-right: 10px;
+    background-color: var(--turquoise);
+    border-radius: 20px;
+    padding-left: 40px;
+    padding-right: 20px;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.card-title {
+    margin-top: 50px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card-num {
+    margin-top: 20px;
+    font-size: 52px;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 18px;
+}
+
+.summary-report {
+    width: 100%;
+}
+
+.island-tabs {
+    font-size: 18px;
+    margin: 0 10px;
+    text-align: center;
+}
+
+.line {
+    margin-top: 20px;
+    background-color: var(--grey);
+    border: none;
+    height: 1px;
+}
+
+.table-info h3 {
+    margin-top: 40px;
 }
 
 /* Responsive */

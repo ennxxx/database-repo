@@ -64,7 +64,7 @@ const Add = () => {
     };
 
     return (
-        <div className="add-record-form">
+        <div className="record-form">
 
             <h1 className="title">Book Appointment</h1>
             <p className="instructions">Fill up the following details.</p>
