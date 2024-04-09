@@ -18,7 +18,7 @@ app.get("/total-appointments", getTotalAppointments(central));
 
 app.post('/createAppointment', createAppointment(central, luzon, vismin));
 app.delete('/delete/:apptid', deleteAppointment(central, luzon, vismin));
-app.put('/edit/:apptid', editAppointment(central));
+app.put('/edit/:apptid', editAppointment(central, luzon, vismin));
 
 app.listen(8800, () => {
     console.log('Successfully connected!');
