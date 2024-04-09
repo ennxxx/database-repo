@@ -52,7 +52,7 @@ const Edit = ({ apptId }) => {
     const handleEditRecord = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:8800/central/` + apptId, appt, {
+            await axios.put(`http://localhost:8800/edit/` + apptId, appt, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

@@ -45,7 +45,7 @@ const Appointments = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let url = `http://localhost:8800/central?page=${page}&limit=${itemsPerPage}`;
+                let url = `http://localhost:8800/appointments?page=${page}&limit=${itemsPerPage}`;
                 if (searchTerm && searchTriggered) {
                     url = `http://localhost:8800/search?searchTerm=${searchTerm}&page=${page}&limit=${itemsPerPage}`;
                 }
@@ -74,7 +74,7 @@ const Appointments = () => {
 
     const handleDelete = async (apptid) => {
         try {
-            await axios.delete("http://localhost:8800/central/" + apptid);
+            await axios.delete("http://localhost:8800/delete/" + apptid);
             window.location.reload();
         } catch (err) {
             console.log(err)

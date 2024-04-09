@@ -52,7 +52,7 @@ const Add = () => {
     const handleAddRecord = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:8800/central`, appt, {
+            await axios.post(`http://localhost:8800/createAppointment`, appt, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
