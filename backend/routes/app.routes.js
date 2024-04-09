@@ -37,7 +37,7 @@ export const searchAppointments = (central) => (req, res) => {
 export const getSingleAppointment = (central, luzon, vismin) => (req, res) => {
     const { appointmentID } = req.query;
     const q = `SELECT * FROM appointments WHERE apptid LIKE '%${appointmentID}%'`;
-    if (isCentralConnected()){
+    if (isCentralConnected()) {
         central.query(q, (err, data) => {
             if (err) return res.json(err);
             if (data.length > 0) {
@@ -66,7 +66,7 @@ export const getSingleAppointment = (central, luzon, vismin) => (req, res) => {
             }
         });
     }
-    
+
 }
 
 export const getTotalAppointments = (central) => (req, res) => {
@@ -87,3 +87,234 @@ export const getTotalAppointments = (central) => (req, res) => {
         return res.json({ totalCount });
     });
 }
+
+export const getLuzonRegions = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            RegionName,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Ilocos Region (I)', 
+                'Cagayan Valley (II)', 
+                'Central Luzon (III)', 
+                'CALABARZON (IV-A)', 
+                'MIMAROPA (IV-B)', 
+                'Bicol Region (V)', 
+                'National Capital Region (NCR)', 
+                'Cordillera Administrative Region (CAR)'
+            )
+        GROUP BY 
+            RegionName
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getLuzonProvinces = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            Province,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Ilocos Region (I)', 
+                'Cagayan Valley (II)', 
+                'Central Luzon (III)', 
+                'CALABARZON (IV-A)', 
+                'MIMAROPA (IV-B)', 
+                'Bicol Region (V)', 
+                'National Capital Region (NCR)', 
+                'Cordillera Administrative Region (CAR)'
+            )
+        GROUP BY 
+            Province
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getLuzonCities = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            City,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Ilocos Region (I)', 
+                'Cagayan Valley (II)', 
+                'Central Luzon (III)', 
+                'CALABARZON (IV-A)', 
+                'MIMAROPA (IV-B)', 
+                'Bicol Region (V)', 
+                'National Capital Region (NCR)', 
+                'Cordillera Administrative Region (CAR)'
+            )
+        GROUP BY 
+            City
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getVisayasRegions = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            RegionName,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Western Visayas (VI)', 
+                'Central Visayas (VII)', 
+                'Eastern Visayas (VIII)' 
+            )
+        GROUP BY 
+            RegionName
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getVisayasProvinces = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            Province,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Western Visayas (VI)', 
+                'Central Visayas (VII)', 
+                'Eastern Visayas (VIII)' 
+            )
+        GROUP BY 
+            Province
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getVisayasCities = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            City,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Western Visayas (VI)', 
+                'Central Visayas (VII)', 
+                'Eastern Visayas (VIII)' 
+            )
+        GROUP BY 
+            City
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getMindanaoRegions = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            RegionName,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Zamboanga Peninsula (IX)', 
+                'Northern Mindanao (X)', 
+                'Davao Region (XI)', 
+                'SOCCSKSARGEN (Cotabato Region) (XII)', 
+                'Caraga (XIII)', 
+                'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)' 
+            )
+        GROUP BY 
+            RegionName
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getMindanaoProvinces = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            Province,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Zamboanga Peninsula (IX)', 
+                'Northern Mindanao (X)', 
+                'Davao Region (XI)', 
+                'SOCCSKSARGEN (Cotabato Region) (XII)', 
+                'Caraga (XIII)', 
+                'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)'
+            )
+        GROUP BY 
+            Province
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
+
+export const getMindanaoCities = (central) => (req, res) => {
+    const q = `
+        SELECT 
+            City,
+            COUNT(*) AS totalCount
+        FROM 
+            appointments 
+        WHERE 
+            RegionName IN (
+                'Zamboanga Peninsula (IX)', 
+                'Northern Mindanao (X)', 
+                'Davao Region (XI)', 
+                'SOCCSKSARGEN (Cotabato Region) (XII)', 
+                'Caraga (XIII)', 
+                'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)' 
+            )
+        GROUP BY 
+            City
+    `;
+
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+};
