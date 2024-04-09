@@ -43,11 +43,6 @@ const Report = () => {
         }
     }
 
-    const overall_total = fetchTotalAppointments("Overall");
-    const luzon_total = fetchTotalAppointments("Luzon");
-    const visayas_total = fetchTotalAppointments("Visayas");
-    const mindanao_total = fetchTotalAppointments("Mindanao");
-
     useEffect(() => {
         fetchTotalAppointments(activeTab);
     }, [activeTab]);
