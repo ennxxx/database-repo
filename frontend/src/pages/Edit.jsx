@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { useLocation } from 'react-router-dom';
 import '../App.css';
 import axios from 'axios';
 
@@ -65,7 +64,7 @@ const Edit = ({ apptId }) => {
     };
 
     return (
-        <div className="add-record-form">
+        <div className="record-form">
 
             <h1 className="title">Edit Appointment</h1>
             <p className="instructions">Edit the following details.</p>
