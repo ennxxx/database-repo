@@ -89,16 +89,16 @@ export function determineRegion(regionName) {
 }
 
 // Function to check if the central server is connected
-export function isCentralConnected() {
+export function isCentralConnected(central) {
     return central && central.authorized === true;
 }
 
 // Function to check if the Luzon server is connected
-export function isLuzonConnected() {
+export function isLuzonConnected(luzon) {
     return luzon && luzon.authorized === true;
 }
 
 // Function to check if the VisMin server is connected
-export function isVisMinConnected() {
+export function isVisMinConnected(vismin) {
     return vismin && vismin.authorized === true;
 }
