@@ -25,13 +25,13 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
             }
         });
         if (determineRegion(req.body.RegionName) == 'Luzon'){
-            // wheter or not this errors still need to execute, cuz in case error, it will log 
+            // whether or not this errors still need to execute, cuz in case error, it will log 
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
                 return res.json("Successfully created appointment!")
             });
         } else {
-            // wheter or not this errors still need to execute, cuz in case error, it will log 
+            // whether or not this errors still need to execute, cuz in case error, it will log 
             vismin.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
                 return res.json("Successfully created appointment!")
@@ -57,14 +57,53 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
     }
 }
 
-export const deleteAppointment = (central) => (req, res) => {
+export const deleteAppointment = (central, luzon, vismin) => (req, res) => {
     const apptId = req.params.apptid;
     const q = "DELETE FROM appointments WHERE apptid = ?"
 
-    central.query(q, [apptId], (err, data) => {
-        if (err) return res.json(err);
-        return res.json("Succesfully deleted appoinment!");
-    })
+    // // original
+    // central.query(q, [apptId], (err, data) => {
+    //     if (err) return res.json(err);
+    //     return res.json("Succesfully deleted appoinment!");
+    // })
+
+    if (isCentralConnected()){
+        central.query(q, [apptId], (err, data) => {
+            if (err) return res.json(err);
+            if (!(isLuzonConnected() && isVisMinConnected())){  // when other node is down, need to ensure it queries successfully to central node
+                return res.json("Successfully deleted appointment!")
+            }
+        });
+        if (determineRegion(req.body.RegionName) == 'Luzon'){
+            // whether or not this errors still need to execute, cuz in case error, it will log 
+            luzon.query(q, [apptId], (err, data) => {
+                if (err) return res.json(err);
+                return res.json("Successfully deleted appointment!")
+            });
+        } else {
+            // whether or not this errors still need to execute, cuz in case error, it will log 
+            vismin.query(q, [apptId], (err, data) => {
+                if (err) return res.json(err);
+                return res.json("Successfully deleted appointment!")
+            });
+        }
+    } else {    // central node is down, no need to check if others are down bcuz specs say only 1 can be down
+        if (determineRegion(req.body.RegionName) == 'Luzon'){
+            luzon.query(q, [apptId], (err, data) => {
+                if (err) return res.json(err);
+            });
+        } else {
+            vismin.query(q, [apptId], (err, data) => {
+                if (err) return res.json(err);
+            });
+        }
+        // this will error, but needed for logs
+        central.query(q, [apptId], (err, data) => {
+            if (err) return res.json(err);
+            return res.json("Successfully deleted appointment!")
+        });
+    }
+
 }
 
 export const editAppointment = (central) => (req, res) => {

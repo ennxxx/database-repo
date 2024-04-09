@@ -17,7 +17,7 @@ app.get('/appointment', getSingleAppointment(central));
 app.get("/total-appointments", getTotalAppointments(central));
 
 app.post('/createAppointment', createAppointment(central, luzon, vismin));
-app.delete('/delete/:apptid', deleteAppointment(central));
+app.delete('/delete/:apptid', deleteAppointment(central, luzon, vismin));
 app.put('/edit/:apptid', editAppointment(central));
 
 app.listen(8800, () => {
