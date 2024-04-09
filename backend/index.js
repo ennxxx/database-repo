@@ -13,7 +13,7 @@ let { central, luzon, vismin } = handleDisconnect();
 
 app.get('/appointments', getAllAppointments(central));
 app.get('/search', searchAppointments(central));
-app.get('/appointment', getSingleAppointment(central));
+app.get('/appointment', getSingleAppointment(central, luzon, vismin));
 app.get("/total-appointments", getTotalAppointments(central));
 
 app.post('/createAppointment', createAppointment(central, luzon, vismin));

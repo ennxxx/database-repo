@@ -1,4 +1,5 @@
 import express from 'express';
+import { isCentralConnected } from '../helpers.js';
 
 export const getAllAppointments = (central) => (req, res) => {
     const { page, limit } = req.query;
@@ -33,18 +34,39 @@ export const searchAppointments = (central) => (req, res) => {
     });
 }
 
-export const getSingleAppointment = (central) => (req, res) => {
+export const getSingleAppointment = (central, luzon, vismin) => (req, res) => {
     const { appointmentID } = req.query;
     const q = `SELECT * FROM appointments WHERE apptid LIKE '%${appointmentID}%'`;
-    central.query(q, (err, data) => {
-        if (err) return res.json(err);
-        if (data.length > 0) {
-            const appointmentData = data[0];
-            return res.json(appointmentData);
-        } else {
-            return res.json({});
-        }
-    });
+    if (isCentralConnected()){
+        central.query(q, (err, data) => {
+            if (err) return res.json(err);
+            if (data.length > 0) {
+                const appointmentData = data[0];
+                return res.json(appointmentData);
+            } else {
+                return res.json({});
+            }
+        });
+    } else {
+        luzon.query(q, (err, data) => {
+            if (err) return res.json(err);
+            if (data.length > 0) {
+                const appointmentData = data[0];
+                return res.json(appointmentData);
+            } else {
+                vismin.query(q, (err, data) => {
+                    if (err) return res.json(err);
+                    if (data.length > 0) {
+                        const appointmentData = data[0];
+                        return res.json(appointmentData);
+                    } else {
+                        return res.json({});
+                    }
+                });
+            }
+        });
+    }
+    
 }
 
 export const getTotalAppointments = (central) => (req, res) => {
