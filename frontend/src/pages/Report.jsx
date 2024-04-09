@@ -1,12 +1,56 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { MantineProvider, Tabs } from '@mantine/core';
+import axios from 'axios';
 
 import '../App.css';
 
 const Report = () => {
 
     const [activeLink, setActiveLink] = useState('report');
+    const [activeTab, setActiveTab] = useState('Overall');
+    const [totalAppts, setTotalAppts] = useState(null);
+    const [luzonTotal, setLuzonTotal] = useState(null);
+    const [visayasTotal, setVisayasTotal] = useState(null);
+    const [mindanaoTotal, setMindanaoTotal] = useState(null);
+
+    const handleTabChange = (value) => {
+        setActiveTab(value);
+        fetchTotalAppointments(value);
+    };
+
+    const fetchTotalAppointments = async (tab) => {
+        try {
+            const response = await axios.get(`http://localhost:8800/total-appointments?tab=${tab}`);
+            switch (tab) {
+                case 'Overall':
+                    setTotalAppts(response.data.totalCount.toLocaleString());
+                    break;
+                case 'Luzon':
+                    setLuzonTotal(response.data.totalCount.toLocaleString());
+                    break;
+                case 'Visayas':
+                    setVisayasTotal(response.data.totalCount.toLocaleString());
+                    break;
+                case 'Mindanao':
+                    setMindanaoTotal(response.data.totalCount.toLocaleString());
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error('Error fetching total appointments:', error);
+        }
+    }
+
+    const overall_total = fetchTotalAppointments("Overall");
+    const luzon_total = fetchTotalAppointments("Luzon");
+    const visayas_total = fetchTotalAppointments("Visayas");
+    const mindanao_total = fetchTotalAppointments("Mindanao");
+
+    useEffect(() => {
+        fetchTotalAppointments(activeTab);
+    }, [activeTab]);
 
     return (
         <div className="body">
@@ -32,8 +76,13 @@ const Report = () => {
             <div className="appt-cards">
                 <div className="appt-card">
                     <p className="card-title">Total Appointments</p>
-                    <p className="card-num" id="total">268,143</p>
-                    <p className="card-text">Luzon</p>
+                    <p className="card-num" id="total">
+                        {activeTab === 'Overall' ? totalAppts :
+                            activeTab === 'Luzon' ? luzonTotal :
+                                activeTab === 'Visayas' ? visayasTotal :
+                                    activeTab === 'Mindanao' ? mindanaoTotal : null}
+                    </p>
+                    <p className="card-text">{activeTab}</p>
                 </div>
                 <div className="appt-card">
                     <p className="card-title">Highest per Region</p>
@@ -54,66 +103,60 @@ const Report = () => {
 
             <MantineProvider>
                 <div className="summary-report">
-                    <Tabs variant="pills" color="rgba(98, 104, 240, 1)" radius="md" defaultValue="summary">
+                    <Tabs variant="pills" color="rgba(98, 104, 240, 1)" radius="md" defaultValue="Overall" value={activeTab} onChange={handleTabChange}>
                         <Tabs.List>
-                            <Tabs.Tab value="summary">
+                            <Tabs.Tab value="Overall">
                                 <p className="island-tabs">Summary</p>
                             </Tabs.Tab>
-                            <Tabs.Tab value="luzon">
+                            <Tabs.Tab value="Luzon">
                                 <p className="island-tabs">Luzon</p>
                             </Tabs.Tab>
-                            <Tabs.Tab value="visayas">
+                            <Tabs.Tab value="Visayas">
                                 <p className="island-tabs">Visayas</p>
                             </Tabs.Tab>
-                            <Tabs.Tab size="{14}" value="mindanao">
+                            <Tabs.Tab value="Mindanao">
                                 <p className="island-tabs">Mindanao</p>
                             </Tabs.Tab>
                         </Tabs.List>
 
                         <hr className="line" />
 
-                        <Tabs.Panel value="summary" >
+                        <Tabs.Panel value="Overall" >
                             <div className="table-info">
-                                <h3>Total Number of Appointments</h3>
+                                <h2>Total Number of Appointments</h2>
                                 <table className="table-summary">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Luzon</td>
-                                            <td>200,000</td>
+                                            <td className="table-location">Luzon</td>
+                                            <td className="table-num-appts">{luzonTotal}</td>
                                         </tr>
                                         <tr>
-                                            <td>Visayas</td>
-                                            <td>200,000</td>
+                                            <td className="table-location">Visayas</td>
+                                            <td className="table-num-appts">{visayasTotal}</td>
                                         </tr>
                                         <tr>
-                                            <td>Mindanao</td>
-                                            <td>200,000</td>
+                                            <td className="table-location">Mindanao</td>
+                                            <td className="table-num-appts">{mindanaoTotal}</td>
                                         </tr>
-                                        <tr>
+                                        <tr className="table-total">
                                             <td>Total</td>
-                                            <td>200,000</td>
+                                            <td className="table-num-appts">{totalAppts}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </Tabs.Panel>
 
-                        <Tabs.Panel value="luzon" >
-                            Luzon
+                        <Tabs.Panel value="Luzon" >
+
                         </Tabs.Panel>
 
-                        <Tabs.Panel value="visayas" >
-                            Visayas
+                        <Tabs.Panel value="Visayas" >
+
                         </Tabs.Panel>
 
-                        <Tabs.Panel value="mindanao" >
-                            Mindanao
+                        <Tabs.Panel value="Mindanao" >
+
                         </Tabs.Panel>
                     </Tabs>
                 </div>

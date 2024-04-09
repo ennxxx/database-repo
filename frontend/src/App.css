@@ -266,8 +266,8 @@
     background-color: white;
     border: 1px solid #ccc;
     padding: 50px;
-    width: 450px;
-    height: 570px;
+    width: 500px;
+    height: 700px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     border-radius: 20px;
@@ -348,7 +348,7 @@
     border: 1px solid var(--turquoise);
     border-radius: 10px;
     width: 100px;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .submit-btn:hover {
@@ -410,9 +410,31 @@
     height: 1px;
 }
 
-.table-info h3 {
-    margin-top: 40px;
+.table-info {
+    margin: 0 20px;
 }
+
+.table-info h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.table-summary {
+    width: 100%;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+}
+
+.table-num-appts {
+    padding-top: 10px;
+    text-align: right;
+}
+
+.table-total {
+    font-weight: 600;
+}
+
 
 /* Responsive */
 

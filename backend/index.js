@@ -64,6 +64,13 @@ function handleDisconnect() {
 
 handleDisconnect();
 
+app.listen(8800, () => {
+    console.log("Successfully connected!");
+});
+
+/****************** WEB APPLICATION ******************/
+
+// View Records
 app.get("/central", (req, res) => {
     const { page, limit } = req.query;
     const offset = (page - 1) * limit;
@@ -81,6 +88,7 @@ app.get("/central", (req, res) => {
     });
 });
 
+// Search Records
 app.get("/search", (req, res) => {
     const { searchTerm, page, limit } = req.query;
     const offset = (page - 1) * limit;
@@ -97,6 +105,7 @@ app.get("/search", (req, res) => {
     });
 });
 
+// Add Record
 app.post("/central", (req, res) => {
     const q = "INSERT INTO appointments (`apptid`, `clinicid`, `doctorid`, `pxid`, `hospitalname`, `QueueDate`, `City`, `Province`, `RegionName`, `mainspecialty`) VALUES (?)";
 
@@ -113,14 +122,14 @@ app.post("/central", (req, res) => {
         req.body.mainspecialty
     ];
 
-    if (isCentralConnected()){
+    if (isCentralConnected()) {
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
-            if (!(isLuzonConnected() && isVisMinConnected())){
+            if (!(isLuzonConnected() && isVisMinConnected())) {
                 return res.json("Successfully created appointment!")
             }
         });
-        if (determineRegion(req.body.RegionName) == 'Luzon'){
+        if (determineRegion(req.body.RegionName) == 'Luzon') {
             // weter or not tis errors still need to execute, cuz in case error, it will log 
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
@@ -134,7 +143,7 @@ app.post("/central", (req, res) => {
             });
         }
     } else {    // central node is down, no need to ceck if oters are down bcuz specs say only 1 can be down
-        if (determineRegion(req.body.RegionName) == 'Luzon'){
+        if (determineRegion(req.body.RegionName) == 'Luzon') {
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
                 // return res.json("Successfully created appointment!")
@@ -151,9 +160,10 @@ app.post("/central", (req, res) => {
             return res.json("Successfully created appointment!")
         });
     }
-    
+
 });
 
+// Delete Record
 app.delete("/central/:apptid", (req, res) => {
     const apptId = req.params.apptid;
     const q = "DELETE FROM appointments WHERE apptid = ?"
@@ -164,6 +174,7 @@ app.delete("/central/:apptid", (req, res) => {
     })
 })
 
+// View Record Based on Appointment ID
 app.get("/appointment", (req, res) => {
     const { appointmentID } = req.query;
     const q = `SELECT * FROM appointments WHERE apptid LIKE '%${appointmentID}%'`;
@@ -178,6 +189,7 @@ app.get("/appointment", (req, res) => {
     });
 });
 
+// Edit Record
 app.put("/central/:apptid", (req, res) => {
     const apptId = req.params.apptid;
     const q = "UPDATE appointments SET `hospitalname` = ?, `QueueDate` = ?, `City` = ?, `Province` = ?, `RegionName` = ?, `mainspecialty` = ? WHERE apptid = ?"
@@ -197,11 +209,31 @@ app.put("/central/:apptid", (req, res) => {
     })
 })
 
-app.listen(8800, () => {
-    console.log("Successfully connected!");
+/****************** GENERATE REPORT ******************/
+
+// Get total number of appointments per region
+app.get("/total-appointments", (req, res) => {
+    const { tab } = req.query;
+    let q = "";
+    if (tab === "Overall") {
+        q = "SELECT COUNT(*) AS totalCount FROM appointments";
+    } else if (tab == "Luzon") {
+        q = "SELECT COUNT(*) AS totalCount FROM appointments WHERE RegionName IN ('Ilocos Region (I)', 'Cagayan Valley (II)', 'Central Luzon (III)', 'CALABARZON (IV-A)', 'MIMAROPA (IV-B)', 'Bicol Region (V)', 'National Capital Region (NCR)', 'Cordillera Administrative Region (CAR)')";
+    } else if (tab == "Visayas") {
+        q = "SELECT COUNT(*) AS totalCount FROM appointments WHERE RegionName IN ('Western Visayas (VI)', 'Central Visayas (VII)', 'Eastern Visayas (VIII)')";
+    } else {
+        q = "SELECT COUNT(*) AS totalCount FROM appointments WHERE RegionName IN ('Zamboanga Peninsula (IX)', 'Northern Mindanao (X)', 'Davao Region (XI)', 'SOCCSKSARGEN (Cotabato Region) (XII)', 'Caraga (XIII)', 'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)')";
+    }
+    central.query(q, (err, data) => {
+        if (err) return res.json(err);
+        const totalCount = data[0].totalCount;
+        return res.json({ totalCount });
+    });
 });
 
-// Function to check where does the region belong to
+/****************** FUNCTIONS ******************/
+
+// Function to check which island the region belongs to
 function determineRegion(regionName) {
     const luzonRegions = [
         "Ilocos Region (I)",
@@ -210,8 +242,8 @@ function determineRegion(regionName) {
         "CALABARZON (IV-A)",
         "MIMAROPA (IV-B)",
         "Bicol Region (V)",
-        "Cordillera Administrative Region (CAR)", 
-        "National Capital Region (NCR)" 
+        "Cordillera Administrative Region (CAR)",
+        "National Capital Region (NCR)"
     ];
     const visminRegions = [
         "Western Visayas (VI)",
@@ -222,7 +254,7 @@ function determineRegion(regionName) {
         "Davao Region (XI)",
         "SOCCSKSARGEN (Cotabato Region) (XII)",
         "Caraga (XIII)",
-        "Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)" 
+        "Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)"
     ];
 
     if (luzonRegions.includes(regionName)) {
