@@ -148,7 +148,26 @@ const Report = () => {
                         </Tabs.Panel>
 
                         <Tabs.Panel value="Luzon" >
+                            <div className="table-info">
+                                <h2>Total Number of Appointments per Region</h2>
+                                <table className="table-summary">
 
+                                </table>
+                            </div>
+                            <hr className="line" />
+                            <div className="table-info">
+                                <h2>Total Number of Appointments per Province</h2>
+                                <table className="table-summary">
+
+                                </table>
+                            </div>
+                            <hr className="line" />
+                            <div className="table-info">
+                                <h2>Total Number of Appointments per City</h2>
+                                <table className="table-summary">
+
+                                </table>
+                            </div>
                         </Tabs.Panel>
 
                         <Tabs.Panel value="Visayas" >
