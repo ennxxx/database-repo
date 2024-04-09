@@ -19,7 +19,7 @@ function handleDisconnect() {
     });
 
     central.on('error', function (err) {
-        console.log('db error', err);
+        console.log('central db error', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
             handleDisconnect();
         } else {
@@ -36,7 +36,7 @@ function handleDisconnect() {
     });
 
     luzon.on('error', function (err) {
-        console.log('db error', err);
+        console.log('luzon db error', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
             handleDisconnect();
         } else {
@@ -53,7 +53,7 @@ function handleDisconnect() {
     });
 
     vismin.on('error', function (err) {
-        console.log('db error', err);
+        console.log('vismin db error', err);
         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
             handleDisconnect();
         } else {
@@ -113,10 +113,45 @@ app.post("/central", (req, res) => {
         req.body.mainspecialty
     ];
 
-    central.query(q, [values], (err, data) => {
-        if (err) return res.json(err);
-        return res.json("Successfully created appointment!")
-    });
+    if (isCentralConnected()){
+        central.query(q, [values], (err, data) => {
+            if (err) return res.json(err);
+            if (!(isLuzonConnected() && isVisMinConnected())){
+                return res.json("Successfully created appointment!")
+            }
+        });
+        if (determineRegion(req.body.RegionName) == 'Luzon'){
+            // weter or not tis errors still need to execute, cuz in case error, it will log 
+            luzon.query(q, [values], (err, data) => {
+                if (err) return res.json(err);
+                return res.json("Successfully created appointment!")
+            });
+        } else {
+            // weter or not tis errors still need to execute, cuz in case error, it will log 
+            vismin.query(q, [values], (err, data) => {
+                if (err) return res.json(err);
+                return res.json("Successfully created appointment!")
+            });
+        }
+    } else {    // central node is down, no need to ceck if oters are down bcuz specs say only 1 can be down
+        if (determineRegion(req.body.RegionName) == 'Luzon'){
+            luzon.query(q, [values], (err, data) => {
+                if (err) return res.json(err);
+                // return res.json("Successfully created appointment!")
+            });
+        } else {
+            vismin.query(q, [values], (err, data) => {
+                if (err) return res.json(err);
+                // return res.json("Successfully created appointment!")
+            });
+        }
+        // tis will error, but needed for logs
+        central.query(q, [values], (err, data) => {
+            if (err) return res.json(err);
+            return res.json("Successfully created appointment!")
+        });
+    }
+    
 });
 
 app.delete("/central/:apptid", (req, res) => {
@@ -165,3 +200,51 @@ app.put("/central/:apptid", (req, res) => {
 app.listen(8800, () => {
     console.log("Successfully connected!");
 });
+
+// Function to check where does the region belong to
+function determineRegion(regionName) {
+    const luzonRegions = [
+        "Ilocos Region (I)",
+        "Cagayan Valley (II)",
+        "Central Luzon (III)",
+        "CALABARZON (IV-A)",
+        "MIMAROPA (IV-B)",
+        "Bicol Region (V)",
+        "Cordillera Administrative Region (CAR)", 
+        "National Capital Region (NCR)" 
+    ];
+    const visminRegions = [
+        "Western Visayas (VI)",
+        "Central Visayas (VII)",
+        "Eastern Visayas (VIII)",
+        "Zamboanga Peninsula (IX)",
+        "Northern Mindanao (X)",
+        "Davao Region (XI)",
+        "SOCCSKSARGEN (Cotabato Region) (XII)",
+        "Caraga (XIII)",
+        "Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)" 
+    ];
+
+    if (luzonRegions.includes(regionName)) {
+        return "Luzon";
+    } else if (visminRegions.includes(regionName)) {
+        return "VisMin"
+    } else {
+        return "Unknown";
+    }
+}
+
+// Function to check if the central server is connected
+function isCentralConnected() {
+    return central && central.authorized === true;
+}
+
+// Function to check if the Luzon server is connected
+function isLuzonConnected() {
+    return luzon && luzon.authorized === true;
+}
+
+// Function to check if the VisMin server is connected
+function isVisMinConnected() {
+    return vismin && vismin.authorized === true;
+}
