@@ -89,7 +89,7 @@ const Add = () => {
                 <label htmlFor="region">Region:</label>
                 <select id="region" onChange={handleRegion} name="RegionName" >
                     <option value="" disabled selected>Region</option>
-                    <option value="IIlocos Region (I)">Ilocos Region (I)</option>
+                    <option value="Ilocos Region (I)">Ilocos Region (I)</option>
                     <option value="Cagayan Valley (II)">Cagayan Valley (II)</option>
                     <option value="Central Luzon (III)">Central Luzon (III)</option>
                     <option value="CALABARZON (IV-A)">CALABARZON (IV-A)</option>
