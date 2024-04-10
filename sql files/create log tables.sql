@@ -1,4 +1,8 @@
 -- create transaction log to replicate easier
+
+DROP TABLE IF EXISTS transaction_log;
+DROP TABLE IF EXISTS error_log;
+
 CREATE TABLE transaction_log (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     transaction_id INT,

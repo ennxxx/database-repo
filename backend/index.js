@@ -16,37 +16,47 @@ app.use(cors());
 // Function to get the latest timestamp from a log table
 async function getLatestTimestamp(connection) {
     const [rows] = await connection.query('SELECT MAX(timestamp) as maxTimestamp FROM transaction_log');
-    console.log('Latest timestamp fetched: ' + rows[0].maxTimestamp);
+    console.log('Latest timestamp fetched: ' + rows[0].maxTimestamp, "@", connection.connection.config.database);
     return rows[0].maxTimestamp;
 }
 
 // Function to get the operations from a log table after a certain timestamp
 async function getOperationsAfterTimestamp(connection, timestamp) {
-    const [rows] = await connection.query('SELECT * FROM transaction_log WHERE timestamp >= ? ORDER BY timestamp', [timestamp]);
-    console.log('Operations after timestamp fetched: ' + rows.length + ' rows.');
+    const [rows] = await connection.query('SELECT * FROM transaction_log WHERE timestamp > ? ORDER BY timestamp', [timestamp]);
+    console.log('Operations after timestamp fetched: ' + rows.length + ' rows.', "FROM ", connection.connection.config.database);
     console.log(rows);
+
+    const [test] = await connection.query('SELECT * FROM transaction_log');
+    console.log("OVER HERE IS THE LAMAN NG TRANSACTION LOG: ", test.length, "connection: ", connection.connection.config.database)
     return rows;
 }
 
 // Function to replay an operation
 async function replayOperation(connection, operation) {
-    const { operation: opType, table, old_value: oldValue, new_value: newValue } = operation;
-    const parsedNewValue = JSON.parse(newValue);
-
+    console.log("operation on connection: ", connection.connection.config.database);
+    console.log("operation: ", operation);
+    const { operation_type: opType, table_name: table, old_data: oldValue, new_data: newValue } = operation;
+    // console.log("OLD DATA: ", oldValue);
+    // console.log("NEW DATA: ", newValue)
+    
+    // const parsedNewValue = JSON.parse(newValue);
+    // const parsedOldValue= JSON.parse(oldValue);
+    // console.log("PASERD NEW VALUE: ", parsedNewValue)
+    
     switch (opType) {
         case 'INSERT':
-            const insertQuery = `INSERT INTO ${table} SET ?`;
-            await connection.query(insertQuery, parsedNewValue);
+            const insertQuery = "INSERT INTO appointments (`apptid`, `clinicid`, `doctorid`, `pxid`, `hospitalname`, `QueueDate`, `City`, `Province`, `RegionName`, `mainspecialty`) VALUES (?)";
+            await connection.query(insertQuery, [[newValue.apptid, newValue.clinicid, newValue.doctorid, newValue.pxid, newValue.hospitalname, newValue.QueueDate, newValue.City, newValue.Province, newValue.RegionName, newValue.mainspecialty]]);
             console.log(`Inserted new record into ${table}.`);
             break;
         case 'UPDATE':
-            const updateQuery = `UPDATE ${table} SET ? WHERE id = ?`;
-            await connection.query(updateQuery, [parsedNewValue, parsedNewValue.id]);
+            const updateQuery = "UPDATE appointments SET `hospitalname` = ?, `QueueDate` = ?, `City` = ?, `Province` = ?, `RegionName` = ?, `mainspecialty` = ? WHERE apptid = ?"
+            await connection.query(updateQuery, [newValue.hospitalname, newValue.QueueDate, newValue.City, newValue.Province, newValue.RegionName, newValue.mainspecialty, newValue.apptid]);
             console.log(`Updated record in ${table}.`);
             break;
         case 'DELETE':
-            const deleteQuery = `DELETE FROM ${table} WHERE id = ?`;
-            await connection.query(deleteQuery, [parsedNewValue.id]);
+            const deleteQuery = `DELETE FROM ${table} WHERE apptid = ?`;
+            await connection.query(deleteQuery, [oldValue.apptid]);
             console.log(`Deleted record from ${table}.`);
             break;
         default:
@@ -59,16 +69,22 @@ async function replayOperation(connection, operation) {
 async function performRecovery(node1, node2) {
     const timestamp1 = await getLatestTimestamp(node1);
     const timestamp2 = await getLatestTimestamp(node2);
-
+    console.log("node 1: ", node1.connection.config.database, "node 2: ", node2.connection.config.database);
+    // node 2 more updated
     if (timestamp1 < timestamp2) {
-        const operations = await getOperationsAfterTimestamp(node1, timestamp1);
+        // get operations from node 2 after node 1's latest
+        console.log("node 2 more updated")
+        const operations = await getOperationsAfterTimestamp(node2, timestamp1);
+        for (const operation of operations) {
+            // execute operations on node 1
+            await replayOperation(node1, operation);
+        }
+    // node 1 more updated
+    } else if (timestamp2 < timestamp1) {
+        console.log("node 1 more updated")
+        const operations = await getOperationsAfterTimestamp(node1, timestamp2);
         for (const operation of operations) {
             await replayOperation(node2, operation);
-        }
-    } else if (timestamp2 < timestamp1) {
-        const operations = await getOperationsAfterTimestamp(node2, timestamp2);
-        for (const operation of operations) {
-            await replayOperation(node1, operation);
         }
     } else {
         console.log('Nodes are already synced.');
