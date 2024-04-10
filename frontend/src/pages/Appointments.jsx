@@ -42,22 +42,24 @@ const Appointments = () => {
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let url = `http://localhost:8800/appointments?page=${page}&limit=${itemsPerPage}`;
-                if (searchTerm && searchTriggered) {
-                    url = `http://localhost:8800/search?searchTerm=${searchTerm}&page=${page}&limit=${itemsPerPage}`;
-                }
-                const res = await axios.get(url);
-                setAppts(res.data.data);
-                setTotalPages(res.data.totalPages);
-            } catch (err) {
-                console.log(err);
-            }
-        };
-        fetchData();
-    }, [page, itemsPerPage, searchTerm, searchTriggered]);
+    useEffect(() => { 
+        const fetchData = async () => { 
+            try { 
+                let url = `http://localhost:8800/appointments?page=${page}&limit=${itemsPerPage}`; 
+                if (searchTerm && searchTriggered) { 
+                    url = `http://localhost:8800/search?searchTerm=${searchTerm}&page=${page}&limit=${itemsPerPage}`; 
+                } 
+                const res = await axios.get(url); 
+                setAppts(res.data.data || []); 
+                setTotalPages(res.data.totalPages || 1); 
+            } catch (error) { 
+                console.error("Failed to fetch appointments:", error); 
+                setAppts([]); 
+                setTotalPages(1); 
+            } 
+        }; 
+        fetchData(); 
+    }, [page, itemsPerPage, searchTerm, searchTriggered]); 
 
     const handleSearch = async (e) => {
         if (e.key === 'Enter') {
