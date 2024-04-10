@@ -23,10 +23,10 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
     //     return res.json("Successfully created appointment!")
     // });
 
-    if (isCentralConnected()){
+    if (isCentralConnected(central)){
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
-            if (!(isLuzonConnected() && isVisMinConnected())){  // when other node is down, need to ensure it queries successfully to central node
+            if (!(isLuzonConnected(luzon) && isVisMinConnected(vismin))){  // when other node is down, need to ensure it queries successfully to central node
                 return res.json("Successfully created appointment!")
             }
         });
@@ -43,7 +43,7 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
                 return res.json("Successfully created appointment!")
             });
         }
-    } else {    // central node is down, no need to check if others are down bcuz specs say only 1 can be down
+    } else { console.log("add: central node is down");   // central node is down, no need to check if others are down bcuz specs say only 1 can be down
         if (determineRegion(req.body.RegionName) == 'Luzon'){
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
