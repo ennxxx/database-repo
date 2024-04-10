@@ -23,7 +23,7 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
     //     return res.json("Successfully created appointment!")
     // });
 
-    if (isCentralConnected(central)){
+    if (isCentralConnected(central)){   // remove central to simulate central node down
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
             if (!(isLuzonConnected(luzon) && isVisMinConnected(vismin))){  // when other node is down, need to ensure it queries successfully to central node
@@ -43,7 +43,7 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
                 return res.json("Successfully created appointment!")
             });
         }
-    } else { console.log("add: central node is down");   // central node is down, no need to check if others are down bcuz specs say only 1 can be down
+    } else { console.log("add: central node down");  // central node is down, no need to check if others are down bcuz specs say only 1 can be down
         if (determineRegion(req.body.RegionName) == 'Luzon'){
             luzon.query(q, [values], (err, data) => {
                 if (err) return res.json(err);
@@ -72,7 +72,7 @@ export const deleteAppointment = (central, luzon, vismin) => (req, res) => {
     //     if (err) return res.json(err);
     //     return res.json("Succesfully deleted appoinment!");
     // })
-
+    
     if (isCentralConnected()){
         central.query(q, [apptId], (err, data) => {
             if (err) return res.json(err);
@@ -93,7 +93,7 @@ export const deleteAppointment = (central, luzon, vismin) => (req, res) => {
                 return res.json("Successfully deleted appointment!")
             });
         }
-    } else {    // central node is down, no need to check if others are down bcuz specs say only 1 can be down
+    } else { console.log("delete: central node down")    // central node is down, no need to check if others are down bcuz specs say only 1 can be down
         if (determineRegion(req.body.RegionName) == 'Luzon'){
             luzon.query(q, [apptId], (err, data) => {
                 if (err) return res.json(err);
