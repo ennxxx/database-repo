@@ -17,12 +17,6 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
         req.body.mainspecialty
     ];
 
-    // // original
-    // central.query(q, [values], (err, data) => {
-    //     if (err) return res.json(err);
-    //     return res.json("Successfully created appointment!")
-    // });
-
     if (isCentralConnected(central)){   // remove central to simulate central node down
         central.query(q, [values], (err, data) => {
             if (err) return res.json(err);
@@ -66,12 +60,6 @@ export const createAppointment = (central, luzon, vismin) => (req, res) => {
 export const deleteAppointment = (central, luzon, vismin) => (req, res) => {
     const apptId = req.params.apptid;
     const q = "DELETE FROM appointments WHERE apptid = ?"
-
-    // // original
-    // central.query(q, [apptId], (err, data) => {
-    //     if (err) return res.json(err);
-    //     return res.json("Succesfully deleted appoinment!");
-    // })
     
     if (isCentralConnected(central)){   // remove central to simulate central node down
         central.query(q, [apptId], (err, data) => {
@@ -124,12 +112,6 @@ export const editAppointment = (central, luzon, vismin) => (req, res) => {
         req.body.RegionName,
         req.body.mainspecialty
     ];
-
-    // // original 
-    // central.query(q, [...values, apptId], (err, data) => {
-    //     if (err) return res.json(err);
-    //     return res.json("Succesfully edited appoinment!");
-    // })
 
     if (isCentralConnected(central)){
         central.query(q, [...values, apptId], (err, data) => {
