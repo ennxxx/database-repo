@@ -131,10 +131,10 @@ export const editAppointment = (central, luzon, vismin) => (req, res) => {
     //     return res.json("Succesfully edited appoinment!");
     // })
 
-    if (isCentralConnected()){
+    if (isCentralConnected(central)){
         central.query(q, [...values, apptId], (err, data) => {
             if (err) return res.json(err);
-            if (!(isLuzonConnected() && isVisMinConnected())){  // when other node is down, need to ensure it queries successfully to central node
+            if (!(isLuzonConnected(luzon) && isVisMinConnected(vismin))){  // when other node is down, need to ensure it queries successfully to central node
                 return res.json("Successfully edited appointment!")
             }
         });

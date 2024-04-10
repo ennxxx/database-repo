@@ -5,7 +5,7 @@ export const getAllAppointments = (central, luzon, vismin) => (req, res) => {
     const { page, limit } = req.query;
     const offset = (page - 1) * limit;
     const q = `SELECT * FROM appointments LIMIT ${limit} OFFSET ${offset}`;
-    if (isCentralConnected()){  // remove central to simulate central node down
+    if (isCentralConnected(central)){  // remove central to simulate central node down
         central.query(q, (err, data) => {
             if (err) return res.json(err);
     
@@ -107,9 +107,10 @@ export const searchAppointments = (central, luzon, vismin) => (req, res) => {
 
         // Function to check if all queries are completed and then respond
         function checkAndRespond() {
-            if (dataL && dataVM && totalCountL && totalCountVM) {
+            if ((dataL || dataVM) && (totalCountL || totalCountVM)) {
                 const data = [...dataL, ...dataVM];
                 console.log("total counts: ", totalCountL, totalCountVM)
+                console.log("data: ", data)
                 const totalPages = Math.ceil((totalCountL + totalCountVM) / limit);
                 return res.json({ data, totalPages });
             }
@@ -122,7 +123,7 @@ export const searchAppointments = (central, luzon, vismin) => (req, res) => {
 export const getSingleAppointment = (central, luzon, vismin) => (req, res) => {
     const { appointmentID } = req.query;
     const q = `SELECT * FROM appointments WHERE apptid LIKE '%${appointmentID}%'`;
-    if (isCentralConnected()) {
+    if (isCentralConnected(central)) {
         central.query(q, (err, data) => {
             if (err) return res.json(err);
             if (data.length > 0) {
