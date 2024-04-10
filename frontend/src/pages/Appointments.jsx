@@ -72,9 +72,11 @@ const Appointments = () => {
         setSearchTriggered(false);
     };
 
-    const handleDelete = async (apptid) => {
+    const handleDelete = async (apptid, RegionName) => {
         try {
-            await axios.delete("http://localhost:8800/delete/" + apptid);
+            await axios.delete("http://localhost:8800/delete/" + apptid, {
+                data: { RegionName } 
+            });
             window.location.reload();
         } catch (err) {
             console.log(err)
@@ -192,7 +194,7 @@ const Appointments = () => {
                                 <button className="edit-button" onClick={() => { setSelectedAppointmentId(appt.apptid); toggleEditPopup(); }}>
                                     <PiPencilSimpleLine />
                                 </button>
-                                <button className="delete-button" onClick={() => handleDelete(appt.apptid)}>
+                                <button className="delete-button" onClick={() => handleDelete(appt.apptid, appt.RegionName)}>
                                     <PiTrashFill />
                                 </button>
                             </td>

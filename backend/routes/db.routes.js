@@ -73,7 +73,7 @@ export const deleteAppointment = (central, luzon, vismin) => (req, res) => {
     //     return res.json("Succesfully deleted appoinment!");
     // })
     
-    if (isCentralConnected(central)){
+    if (isCentralConnected(central)){   // remove central to simulate central node down
         central.query(q, [apptId], (err, data) => {
             if (err) return res.json(err);
             if (!(isLuzonConnected(luzon) && isVisMinConnected(vismin))){  // when other node is down, need to ensure it queries successfully to central node
