@@ -14,7 +14,7 @@ app.use(cors());
 
 let { central, luzon, vismin } = handleDisconnect();
 
-app.get('/appointments', getAllAppointments(central));
+app.get('/appointments', getAllAppointments(central, luzon, vismin));
 app.get('/search', searchAppointments(central, luzon, vismin));
 app.get('/appointment', getSingleAppointment(central, luzon, vismin));
 app.get("/total-appointments", getTotalAppointments(central));

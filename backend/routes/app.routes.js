@@ -1,21 +1,63 @@
 import express from 'express';
 import { isCentralConnected } from '../helpers.js';
 
-export const getAllAppointments = (central) => (req, res) => {
+export const getAllAppointments = (central, luzon, vismin) => (req, res) => {
     const { page, limit } = req.query;
     const offset = (page - 1) * limit;
     const q = `SELECT * FROM appointments LIMIT ${limit} OFFSET ${offset}`;
-    central.query(q, (err, data) => {
-        if (err) return res.json(err);
-
-        const countQuery = "SELECT COUNT(*) AS totalCount FROM appointments";
-        central.query(countQuery, (err, countData) => {
+    if (isCentralConnected()){  // remove central to simulate central node down
+        central.query(q, (err, data) => {
             if (err) return res.json(err);
-            const totalCount = countData[0].totalCount;
-            const totalPages = Math.ceil(totalCount / limit);
-            return res.json({ data, totalPages });
+    
+            const countQuery = "SELECT COUNT(*) AS totalCount FROM appointments";
+            central.query(countQuery, (err, countData) => {
+                if (err) return res.json(err);
+                const totalCount = countData[0].totalCount;
+                const totalPages = Math.ceil(totalCount / limit);
+                return res.json({ data, totalPages });
+            });
         });
-    });
+    } else { console.log("getAll: central node is down");
+        let dataL, dataVM, totalCountL, totalCountVM;
+        const offset = (page - 1) * (limit/2);
+        const q2 = `SELECT * FROM appointments LIMIT ${limit/2} OFFSET ${offset}`;
+        // Query appointments from Luzon
+        luzon.query(q2, (err, resultL) => {
+            if (err) return res.json(err);
+
+            dataL = resultL;
+            const countQuery = "SELECT COUNT(*) AS totalCount FROM appointments";
+            luzon.query(countQuery, (err, countData) => {
+                if (err) return res.json(err);
+                totalCountL = countData[0].totalCount;
+                checkAndRespond();
+            });
+        });
+
+        // Query appointments from VisMin
+        vismin.query(q2, (err, resultVM) => {
+            if (err) return res.json(err);
+
+            dataVM = resultVM;
+            const countQuery = "SELECT COUNT(*) AS totalCount FROM appointments";
+            vismin.query(countQuery, (err, countData) => {
+                if (err) return res.json(err);
+                totalCountVM = countData[0].totalCount;
+                checkAndRespond();
+            });
+        });
+
+        // Function to check if all queries are completed and then respond
+        function checkAndRespond() {
+            if (dataL && dataVM && totalCountL && totalCountVM) {
+                const data = [...dataL, ...dataVM];
+                console.log("total counts: ", totalCountL, totalCountVM)
+                const totalPages = Math.ceil((totalCountL + totalCountVM) / limit);
+                return res.json({ data, totalPages });
+            }
+        }
+    }
+    
 }
 
 export const searchAppointments = (central, luzon, vismin) => (req, res) => {
