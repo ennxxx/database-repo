@@ -17,11 +17,14 @@ app.use(cors());
 async function getLatestTimestamp(connection) {
     const [rows] = await connection.query('SELECT MAX(timestamp) as maxTimestamp FROM transaction_log');
     console.log('Latest timestamp fetched: ' + rows[0].maxTimestamp, "@", connection.connection.config.database);
+    const [test] = await connection.query('SELECT * FROM transaction_log WHERE timestamp > ? ORDER BY timestamp', rows[0].maxTimestamp)
+    console.log("node: ", connection.connection.config.database, "TEST HERE WAT ROWS BA TLGA: ", test)
     return rows[0].maxTimestamp;
 }
 
 // Function to get the operations from a log table after a certain timestamp
 async function getOperationsAfterTimestamp(connection, timestamp) {
+    console.log("timestamp comparing: ", timestamp)
     const [rows] = await connection.query('SELECT * FROM transaction_log WHERE timestamp > ? ORDER BY timestamp', [timestamp]);
     console.log('Operations after timestamp fetched: ' + rows.length + ' rows.', "FROM ", connection.connection.config.database);
     console.log(rows);
